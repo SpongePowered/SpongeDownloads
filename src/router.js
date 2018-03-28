@@ -7,6 +7,7 @@ Vue.use(Router);
 
 export default new Router({
     mode: 'history',
+    linkActiveClass: 'current',
     routes: [
         {
             name: 'root',
