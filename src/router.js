@@ -2,10 +2,11 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Main from './views/Main.vue'
 import Downloads from './views/Downloads.vue'
+import {Platforms} from './platforms'
 
 Vue.use(Router);
 
-export default new Router({
+const router = new Router({
     mode: 'history',
     linkActiveClass: 'current',
     routes: [
@@ -35,4 +36,11 @@ export default new Router({
             component: Downloads
         }
     ]
-})
+});
+
+router.afterEach(to => {
+    const suffix = to.params.project ? Platforms[to.params.project].suffix : "";
+    document.title = `Sponge${suffix} Downloads`
+});
+
+export default router;
