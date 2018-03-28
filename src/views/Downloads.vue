@@ -211,6 +211,7 @@
 
                             recommendedBuild.label = Labels.recommended;
                             recommendedBuild.labels = [buildTypeData.type, Labels.recommended];
+                            this.platform.addLabels && this.platform.addLabels(recommendedBuild);
                             this.readArtifacts(recommendedBuild);
 
                             buildTypeData.recommended[this.$route.params.category] = recommendedBuild;
