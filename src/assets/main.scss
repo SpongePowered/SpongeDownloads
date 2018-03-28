@@ -24,10 +24,6 @@ header {
       padding: 0;
     }
 
-    img {
-      height: 8em;
-    }
-
     h1 {
       font-size: 4.5em;
       margin-left: 20px;
@@ -62,18 +58,9 @@ header {
   padding-top: 20px;
   padding-bottom: 35px;
 
-  img {
-    margin-top: 32px;
-    max-width: 100%;
-  }
-
   @media (max-width: 767px) {
     padding-top: 10px;
     text-align: center;
-
-    img {
-      margin-top: 16px;
-    }
   }
 }
 
