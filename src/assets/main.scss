@@ -55,10 +55,6 @@ header {
       font-weight: bold;
     }
   }
-
-  @media (min-width: 768px) {
-    margin-top: 24px;
-  }
 }
 
 #download-loader {
@@ -105,10 +101,6 @@ header {
     }
   }
 
-  .platform-badge {
-    margin: auto;
-  }
-
   .recommendation {
     font-weight: bold;
     margin-top: 10px;
@@ -127,12 +119,19 @@ header {
   width: 6em;
   padding: 5px;
 
+  margin: auto; // Center
+
   border-radius: 2px;
 
   color: white;
   font-size: 0.5em;
   font-weight: 500;
   text-align: center;
+
+  &.downloads {
+    width: 8em;
+    background-color: $sponge_grey;
+  }
 
   &.spongevanilla {
     background-color: #917300;
