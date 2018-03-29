@@ -7,32 +7,28 @@ import {Platforms} from './platforms'
 Vue.use(Router);
 
 const router = new Router({
+    base: process.env.BASE_URL,
     mode: 'history',
     linkActiveClass: 'current',
     routes: [
         {
-            name: 'root',
-            path: '/',
-            component: Main,
-        },
-        {
             name: 'main',
-            path: '/downloads',
+            path: '/',
             component: Main
         },
         {
             name: 'downloads-project',
-            path: '/downloads/:project',
+            path: '/:project',
             component: Downloads
         },
         {
             name: 'downloads-build-type',
-            path: '/downloads/:project/:buildType',
+            path: '/:project/:buildType',
             component: Downloads
         },
         {
             name: 'downloads',
-            path: '/downloads/:project/:buildType/:category',
+            path: '/:project/:buildType/:category',
             component: Downloads
         }
     ]
