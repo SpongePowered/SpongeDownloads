@@ -1,11 +1,11 @@
 import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
-import VueResource from 'vue-resource';
+import axios from 'axios';
 
 import './assets/main.scss';
 
-Vue.use(VueResource);
+axios.defaults.baseURL = process.env.DOWNLOADS_API_URL || "https://dl-api.spongepowered.org/v1/";
 
 new Vue({
     router,

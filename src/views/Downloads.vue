@@ -93,7 +93,9 @@
     import 'core-js/fn/array/find';
     import 'core-js/fn/array/includes';
 
-    import {API, Platforms, BuildTypes, Labels} from '../platforms'
+    import axios from 'axios';
+
+    import {Platforms, BuildTypes, Labels} from '../platforms'
     import Builds from '../components/Builds.vue'
 
     export default {
@@ -135,8 +137,8 @@
                 }
             },
             fetchPlatform() {
-                this.$http.get(`${API}/v1/${this.platform.group}/${this.platform.id}`).then(response => {
-                    const project = response.body;
+                axios.get(`/${this.platform.group}/${this.platform.id}`).then(response => {
+                    const project = response.data;
 
                     const buildTypes = [], buildTypesData = {};
 
@@ -206,8 +208,8 @@
 
                     if (recommendedBuild == null) {
                         this.loadingRecommended = true;
-                        this.$http.get(`${API}/v1/${this.platform.group}/${this.platform.id}/downloads/recommended`,{params: params}).then(response => {
-                            const recommendedBuild = response.body;
+                        axios.get(`/${this.platform.group}/${this.platform.id}/downloads/recommended`,{params: params}).then(response => {
+                            const recommendedBuild = response.data;
 
                             recommendedBuild.label = Labels.recommended;
                             recommendedBuild.labels = [buildTypeData.type, Labels.recommended];
@@ -236,11 +238,11 @@
                 params.until = this.$route.query.until;
                 params.since = this.$route.query.since;
 
-                this.$http.get(`${API}/v1/${this.platform.group}/${this.platform.id}/downloads`, {params: params}).then(response => {
+                axios.get(`/${this.platform.group}/${this.platform.id}/downloads`, {params: params}).then(response => {
                     const unsupported = this.platform.category.versions.unsupported.includes(this.$route.params.category)
                             && Labels.unsupported;
 
-                    const builds = response.body;
+                    const builds = response.data;
                     for (const build of builds) {
                         build.labels = [buildTypeData.type];
 

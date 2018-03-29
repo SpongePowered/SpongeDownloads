@@ -12,10 +12,10 @@
         "url": "https://github.com/SpongePowered/SpongeDownloads/issues"
     },
     "dependencies": {
+        "axios": "^0.18.0",
         "core-js": "^2.5.4",
         "intl-relativeformat": "^2.1.0",
         "vue": "^2.5.13",
-        "vue-resource": "^1.5.0",
         "vue-router": "^3.0.1"
     },
     "devDependencies": {

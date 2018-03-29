@@ -1,5 +1,3 @@
-export const API = process.env.DOWNLOADS_API_URL || "https://dl-api.spongepowered.org";
-
 export const BuildTypes = [
     {
         name: "Stable",
