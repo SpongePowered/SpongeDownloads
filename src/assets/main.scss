@@ -3,7 +3,8 @@
 @import "sponge_bootstrap";
 
 header {
-  background: $sponge_yellow;
+  // And the answer is: 42!
+  background: linear-gradient(to right, $sponge_yellow 0%, tint($sponge_yellow, 42%) 50%, $sponge_yellow 100%);
   padding-top: 50px;
   padding-bottom: 20px;
 
