@@ -21,7 +21,7 @@ header {
       text-align: center;
     }
 
-    &> * {
+    & > * {
       display: inline-block;
       vertical-align: middle;
 
@@ -79,7 +79,7 @@ header {
   h3 {
     font-size: 3em;
 
-    &> span {
+    & > span {
       display: inline-block;
     }
   }
@@ -338,7 +338,7 @@ header {
 .commit {
   margin-bottom: 5px;
 
-  &> a {
+  & > a {
     color: $sponge_dark_grey;
     font-weight: bold;
     word-wrap: break-word;
