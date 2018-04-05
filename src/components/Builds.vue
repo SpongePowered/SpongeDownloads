@@ -6,11 +6,11 @@
       </h4>
 
       <div class="artifacts">
-        <b-btn v-for="artifact in build.artifacts" :key="artifact.classifier"
+        <b-button v-for="artifact in build.artifacts" :key="artifact.classifier"
                :variant="artifact.primary ? 'primary' : ''" :size="btnSize"
                :href="artifact.url" :title="artifact.type.title">
           <font-awesome-icon :icon="artifact.type.icon"/>
-          <span> {{ artifact.primary ? 'Download' : artifact.type.name }}</span></b-btn>
+          <span> {{ artifact.primary ? 'Download' : artifact.type.name }}</span></b-button>
       </div>
 
       <relative-time class="build-time" :t="build.published"/>
@@ -30,6 +30,8 @@
 </template>
 
 <script>
+  import bButton from 'bootstrap-vue/es/components/button/button';
+
   import RelativeTime from './relative-time'
   import BuildLabel from './build-label'
   import Commits from './Commits.vue'
@@ -50,6 +52,7 @@
       }
     },
     components: {
+      bButton,
       RelativeTime,
       BuildLabel,
       Commits,

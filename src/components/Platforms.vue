@@ -14,6 +14,11 @@
 </template>
 
 <script>
+  import bContainer from 'bootstrap-vue/es/components/layout/container';
+  import bRow from 'bootstrap-vue/es/components/layout/row';
+  import bCol from 'bootstrap-vue/es/components/layout/col';
+  import bButton from 'bootstrap-vue/es/components/button/button';
+
   import {Platforms} from '../platforms'
   import PlatformLogo from './PlatformLogo.vue'
 
@@ -25,6 +30,7 @@
       }
     },
     components: {
+      bContainer, bRow, bCol, bButton,
       PlatformLogo,
     }
   }

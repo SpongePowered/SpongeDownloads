@@ -25,6 +25,8 @@
 </template>
 
 <script>
+  import bCollapse from 'bootstrap-vue/es/components/collapse/collapse';
+
   import EllipsisButton from './EllipsisButton'
   import RelativeTime from './relative-time'
 
@@ -46,6 +48,7 @@
       }
     },
     components: {
+      bCollapse,
       EllipsisButton,
       RelativeTime,
     }

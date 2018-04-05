@@ -2,8 +2,6 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 
-import BootstrapVue from 'bootstrap-vue'
-
 import fontawesome from '@fortawesome/fontawesome'
 import faDownload from '@fortawesome/fontawesome-free-solid/faDownload'
 import faChevronLeft from '@fortawesome/fontawesome-free-solid/faChevronLeft'
@@ -13,10 +11,6 @@ import FontAwesomeIcon from '@fortawesome/vue-fontawesome'
 import axios from 'axios';
 
 import './assets/main.scss'
-import 'bootstrap-vue/dist/bootstrap-vue.css'
-
-// Bootstrap
-Vue.use(BootstrapVue);
 
 // Font Awesome
 fontawesome.library.add(faDownload, faChevronLeft, faChevronRight);

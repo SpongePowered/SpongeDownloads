@@ -20,9 +20,9 @@
           <b-col class="download-category" v-if="platform.category.versions">
             <h3>{{ platform.category.name }} version</h3>
             <b-button-group>
-              <b-btn variant="primary"
+              <b-button variant="primary"
                      v-for="version of platform.category.versions.current" :key="version"
-                     :to="routeForCategory(version)">{{ version }}</b-btn>
+                     :to="routeForCategory(version)">{{ version }}</b-button>
               <b-dropdown variant="primary" right v-if="platform.category.versions.unsupported.length > 0">
                 <b-dropdown-item v-for="version of platform.category.versions.unsupported" :key="version"
                                  :to="routeForCategory(version)">{{ version }}</b-dropdown-item>
@@ -73,14 +73,14 @@
         </div>
 
         <div class="navigation" v-if="builds.length > 0">
-          <b-btn class="newer" size="sm" active-class=""
+          <b-button class="newer" size="sm" active-class=""
                  v-if="$route.query.until || $route.query.since" :to="{query: {since: builds[0].published}}">
             <font-awesome-icon icon="chevron-left"/> Newer
-          </b-btn>
-          <b-btn class="older" size="sm" active-class=""
+          </b-button>
+          <b-button class="older" size="sm" active-class=""
                  v-if="builds.length >= 9" :to="{query: {until: builds[builds.length-1].published}}">
             Older <font-awesome-icon icon="chevron-right"/>
-          </b-btn>
+          </b-button>
           <div class="clearfix"></div>
         </div>
       </b-container>
@@ -95,6 +95,15 @@
 </template>
 
 <script>
+  import bContainer from 'bootstrap-vue/es/components/layout/container';
+  import bRow from 'bootstrap-vue/es/components/layout/row';
+  import bCol from 'bootstrap-vue/es/components/layout/col';
+  import bButton from 'bootstrap-vue/es/components/button/button';
+  import bButtonGroup from 'bootstrap-vue/es/components/button-group/button-group';
+  import bBadge from 'bootstrap-vue/es/components/badge/badge';
+  import bDropdown from 'bootstrap-vue/es/components/dropdown/dropdown';
+  import bDropdownItem from 'bootstrap-vue/es/components/dropdown/dropdown-item';
+
   import 'core-js/fn/set';
   import 'core-js/fn/array/from';
   import 'core-js/fn/array/find';
@@ -356,6 +365,7 @@
       }
     },
     components: {
+      bContainer, bRow, bCol, bButton, bButtonGroup, bBadge, bDropdown, bDropdownItem,
       PlatformLogo,
       Builds,
     }
