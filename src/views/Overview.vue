@@ -1,21 +1,13 @@
 <template>
-  <div>
+  <main id="overview">
     <header>
-      <div class="container">
-        <div class="row">
-          <div class="logo">
-            <h1>Sponge <span class="platform-badge downloads">Downloads</span></h1>
-          </div>
-        </div>
-      </div>
+      <b-container>
+        <h1>Downloads</h1>
+      </b-container>
     </header>
 
-    <section id="downloads">
-      <div class="container">
-        <platforms></platforms>
-      </div>
-    </section>
-  </div>
+    <platforms/>
+  </main>
 </template>
 
 <script>
@@ -24,7 +16,24 @@
   export default {
     name: 'overview',
     components: {
-      platforms: Platforms
+      Platforms,
     }
   }
 </script>
+
+<style lang="scss">
+  @import "../assets/variables";
+
+  #overview {
+    h1 {
+      @include media-breakpoint-down(sm) {
+        text-align: center;
+        font-size: 10vw;
+      }
+    }
+
+    header {
+      margin-bottom: 50px;
+    }
+  }
+</style>

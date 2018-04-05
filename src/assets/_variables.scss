@@ -1,0 +1,37 @@
+// Helper functions
+@function tint($color, $percentage) {
+  @return mix(white, $color, $percentage);
+}
+
+@function shade($color, $percentage) {
+  @return mix(black, $color, $percentage);
+}
+
+// Sponge brand colors
+$sponge_yellow: #f7cf0d;
+$sponge_dark_yellow: #917300;
+$sponge_grey: #333333;
+$sponge_dark_grey: shade($sponge_grey, 15%);
+
+$spongevanilla_color: #917300;
+$spongeforge_color: #910020;
+$spongeapi_color: #009172;
+
+// Bootstrap
+$font-size-base: 1rem;
+
+$primary:   $sponge_grey;
+$secondary: tint($sponge_grey, 50%);
+
+$theme-colors: ("forge": $spongeforge_color);
+
+@import "~bootswatch/dist/flatly/variables";
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+@import "~bootstrap/scss/mixins";
+
+// Mixins
+@mixin montserrat {
+  font-family: Montserrat, $font-family-base;
+  text-transform: uppercase;
+}

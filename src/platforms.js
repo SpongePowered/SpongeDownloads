@@ -1,3 +1,9 @@
+import faDownload from '@fortawesome/fontawesome-free-solid/faDownload'
+import faCode from '@fortawesome/fontawesome-free-solid/faCode'
+import faGraduationCap from '@fortawesome/fontawesome-free-solid/faGraduationCap'
+import faArchive from '@fortawesome/fontawesome-free-solid/faArchive'
+import faWrench from '@fortawesome/fontawesome-free-solid/faWrench'
+
 export const BuildTypes = [
   {
     name: "Stable",
@@ -32,31 +38,31 @@ const ArtifactTypes = {
   Main: {
     name: "Main",
     classifier: '',
-    icon: 'fa-download',
+    icon: faDownload,
     title: "Download"
   },
   Sources: {
     name: "Sources",
     classifier: 'sources',
-    icon: 'fa-code',
+    icon: faCode,
     title: "Download the source code"
   },
   Javadocs: {
     name: "Javadocs",
     classifier: 'javadoc',
-    icon: 'fa-graduation-cap',
+    icon: faGraduationCap,
     title: "Download the Java API documentation"
   },
   Shaded: {
     name: "Shaded",
     classifier: 'shaded',
-    icon: 'fa-archive',
+    icon: faArchive,
     title: "Download a package with all dependencies"
   },
   DevShaded: {
     name: "Dev",
     classifier: 'dev-shaded',
-    icon: 'fa-wrench',
+    icon: faWrench,
     title: "Download an un-obfuscated build with all dependencies for testing in a development environment"
   }
 };

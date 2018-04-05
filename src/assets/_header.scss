@@ -1,0 +1,17 @@
+@import "variables";
+
+header {
+  background: linear-gradient(to right, $sponge_yellow 0%, tint($sponge_yellow, 30%) 50%, $sponge_yellow 100%);
+
+  h1 {
+    font-size: 4rem;
+  }
+
+  padding-top: 20px;
+  padding-bottom: 20px;
+
+  @include media-breakpoint-up(md) {
+    padding-top: 50px;
+    padding-bottom: 50px;
+  }
+}

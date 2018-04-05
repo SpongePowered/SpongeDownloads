@@ -1,63 +1,58 @@
 <template>
-  <main>
+  <main id="downloads">
     <header>
-      <div class="container">
-        <div class="row">
-          <div class="col-lg-5 col-md-6">
+      <b-container>
+        <b-row align-h="center">
+          <b-col sm="12" lg="4">
             <div class="logo">
-              <h1>Sponge<span :class="['platform-badge', platform.id]">{{ platform.suffix }}</span></h1>
+              <h1><platform-logo :platform="platform"/></h1>
             </div>
-          </div>
-          <div class="col-md-3 col-sm-6 download-category" v-if="platform.buildTypes">
+          </b-col>
+          <b-col class="download-category" v-if="platform.buildTypes">
             <h3>Build type</h3>
             <ul id="build-types">
               <li v-for="type in platform.buildTypes" :key="type.id">
-                <router-link :to="routeForBuildType(type)"
-                             :class="['label', 'label-' + type.color]"><span>{{ type.name }}</span></router-link>
+                <b-badge :variant="type.color" :to="routeForBuildType(type)">
+                  <span>{{ type.name }}</span></b-badge>
               </li>
             </ul>
-          </div>
-          <div class="col-lg-4 col-md-3 col-sm-6 download-category" v-if="platform.category.versions">
+          </b-col>
+          <b-col class="download-category" v-if="platform.category.versions">
             <h3>{{ platform.category.name }} version</h3>
-            <div class="btn-group">
-              <router-link v-for="version of platform.category.versions.current" :key="version"
-                           :to="routeForCategory(version)"
-                           class="btn btn-primary">{{ version }}
-              </router-link>
-              <template v-if="platform.category.versions.unsupported.length > 0">
-                <a aria-expanded="false" href="#" class="btn btn-primary dropdown-toggle" data-toggle="dropdown"
-                ><span class="caret"></span></a>
-                <ul class="dropdown-menu dropdown-menu-right">
-                  <li v-for="version of platform.category.versions.unsupported" :key="version">
-                    <router-link :to="routeForCategory(version)">{{ version }}</router-link>
-                  </li>
-                </ul>
-              </template>
-            </div>
-          </div>
-        </div>
-      </div>
+            <b-button-group>
+              <b-btn variant="primary"
+                     v-for="version of platform.category.versions.current" :key="version"
+                     :to="routeForCategory(version)">{{ version }}</b-btn>
+              <b-dropdown variant="primary" right v-if="platform.category.versions.unsupported.length > 0">
+                <b-dropdown-item v-for="version of platform.category.versions.unsupported" :key="version"
+                                 :to="routeForCategory(version)">{{ version }}</b-dropdown-item>
+              </b-dropdown>
+            </b-button-group>
+          </b-col>
+
+          <!-- Empty column to avoid having platform logo centered -->
+          <b-col v-else />
+        </b-row>
+      </b-container>
     </header>
 
     <section id="builds" v-if="builds">
       <div id="recommended-build" v-if="recommended">
-        <div class="container">
-          <div class="row">
-            <h3>{{ recommended.label.title }}</h3>
-            <builds :platform="platform.name" :builds="[recommended]" primary></builds>
-          </div>
-        </div>
+        <b-container>
+          <h3>{{ recommended.label.title }}</h3>
+          <builds :platform="platform.name" :builds="[recommended]" primary/>
+        </b-container>
       </div>
 
-      <div class="container">
-        <div class="row" id="all-builds" v-if="builds.length > 0">
+      <b-container>
+        <div id="all-builds" v-if="builds.length > 0">
           <h3>All builds</h3>
-          <builds :platform="platform.name" :builds="builds"></builds>
+          <builds :platform="platform.name" :builds="builds"/>
         </div>
 
-        <div class="container" id="no-builds" v-else-if="!recommended">
-          <p><strong>Oh no!</strong> Unfortunately, there are no builds available for the current selection.</p>
-          <h4>Possible solutions:</h4>
+        <div id="no-builds" v-else-if="!recommended">
+          <h3>No builds available for the current selection</h3>
+          <strong>Possible solutions:</strong>
           <ul>
             <li v-for="type in getAlternativeBuildTypes()" :key="type.id">
               <router-link :to="adaptRouteForBuildType(type)"
@@ -77,21 +72,23 @@
           </ul>
         </div>
 
-        <div class="row navigation" v-if="builds.length > 0">
-          <router-link v-if="$route.query.until || $route.query.since"
-                       :to="{query: {since: builds[0].published}}" class="btn btn-sm btn-default newer">
-            <i class="fa fa-chevron-left"></i> Newer
-          </router-link>
-          <router-link v-if="builds.length >= 9"
-                       :to="{query: {until: builds[builds.length-1].published}}" class="btn btn-sm btn-default older"
-          >Older <i class="fa fa-chevron-right"></i></router-link>
+        <div class="navigation" v-if="builds.length > 0">
+          <b-btn class="newer" size="sm" active-class=""
+                 v-if="$route.query.until || $route.query.since" :to="{query: {since: builds[0].published}}">
+            <font-awesome-icon icon="chevron-left"/> Newer
+          </b-btn>
+          <b-btn class="older" size="sm" active-class=""
+                 v-if="builds.length >= 9" :to="{query: {until: builds[builds.length-1].published}}">
+            Older <font-awesome-icon icon="chevron-right"/>
+          </b-btn>
+          <div class="clearfix"></div>
         </div>
-      </div>
+      </b-container>
     </section>
 
     <section id="download-loader" v-if="loading">
       <div class="container">
-        <h1>Loading builds...</h1>
+        <h2>Loading builds...</h2>
       </div>
     </section>
   </main>
@@ -107,6 +104,7 @@
 
   import {Platforms, BuildTypes, Labels} from '../platforms'
   import Builds from '../components/Builds.vue'
+  import PlatformLogo from '../components/PlatformLogo.vue'
 
   export default {
     name: 'downloads',
@@ -358,7 +356,93 @@
       }
     },
     components: {
-      builds: Builds
+      PlatformLogo,
+      Builds,
     }
   }
 </script>
+
+<style lang="scss">
+  @import "../assets/variables";
+
+  #downloads {
+    h1 {
+      text-align: center;
+    }
+
+    h3 {
+      font-size: 1.5rem;
+    }
+  }
+
+  #download-loader {
+    margin-top: 50px;
+
+    @include media-breakpoint-down(sm) {
+      text-align: center;
+    }
+  }
+
+  #builds .container {
+    padding-top: 30px;
+    padding-bottom: 10px;
+  }
+
+  .download-category {
+    margin-top: 20px;
+    text-align: center;
+
+    // TODO: Remove build types
+    ul {
+      list-style-type: none;
+      padding: 0;
+
+      line-height: 1.3;
+
+      @include montserrat;
+      font-size: 1.3rem;
+
+      .badge {
+        font-size: 70%;
+        padding-top: 0.3em;
+        padding-bottom: 0.3em;
+
+        &.active span {
+          border-bottom: 1px solid white;
+        }
+      }
+    }
+
+    .dropdown-menu {
+      margin-top: -1px;
+      min-width: 0;
+
+      .active {
+        font-weight: bold;
+      }
+    }
+  }
+
+  #recommended-build {
+    font-size: 1.2rem;
+    background: tint($sponge_grey, 95%);
+  }
+
+  #no-builds h3 {
+    margin-bottom: 30px;
+  }
+
+  .navigation {
+    margin-bottom: 20px;
+
+    .newer {
+      float: left;
+      margin-left: 30px;
+    }
+
+    .older {
+      float: right;
+      margin-right: 10px;
+    }
+  }
+</style>

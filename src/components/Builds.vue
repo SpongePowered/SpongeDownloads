@@ -2,22 +2,22 @@
   <ol class="builds">
     <li v-for="build in builds" :key="build.version" class="build" :id="build.version">
       <h4>{{ build.version }}
-        <build-label v-for="label in build.labels" :key="label.name" :l="label"></build-label>
+        <span class="build-labels"><build-label v-for="label in build.labels" :key="label.name" :l="label"/></span>
       </h4>
 
       <div class="artifacts">
-        <a v-for="artifact in build.artifacts" :key="artifact.classifier"
-           :href="artifact.url" :title="artifact.type.title"
-           :class="['btn', btnClass, artifact.primary ? 'btn-primary' : 'btn-default']">
-          <i :class="['fa', artifact.type.icon]"></i>
-          <span>{{ artifact.primary ? 'Download' : artifact.type.name }}</span></a>
+        <b-btn v-for="artifact in build.artifacts" :key="artifact.classifier"
+               :variant="artifact.primary ? 'primary' : ''" :size="btnSize"
+               :href="artifact.url" :title="artifact.type.title">
+          <font-awesome-icon :icon="artifact.type.icon"/>
+          <span> {{ artifact.primary ? 'Download' : artifact.type.name }}</span></b-btn>
       </div>
 
-      <relative-time class="build-time" :t="build.published"></relative-time>
+      <relative-time class="build-time" :t="build.published"/>
 
       <div class="changelog" v-if="!primary || build.changelog">
         <commits :project="platform" :l="build.changelog"
-                 v-if="build.changelog && build.changelog.length > 0"></commits>
+                 v-if="build.changelog && build.changelog.length > 0"/>
         <div class="changelog-comment" v-else>
           <span v-if="build.changelog">No changes.</span>
           <span v-else>No changelog available.</span>
@@ -45,14 +45,99 @@
       }
     },
     computed: {
-      btnClass() {
-        return this.primary ? 'btn' : 'btn-sm'
+      btnSize() {
+        return this.primary ? '' : 'sm'
       }
     },
     components: {
-      'relative-time': RelativeTime,
-      'build-label': BuildLabel,
-      commits: Commits
+      RelativeTime,
+      BuildLabel,
+      Commits,
     }
   }
 </script>
+
+<style lang="scss">
+  @import "../assets/variables";
+
+  .builds {
+    list-style-type: none;
+    padding: 0;
+
+    @include media-breakpoint-up(sm) {
+      padding-left: 20px;
+    }
+  }
+
+  .build {
+    display: block;
+    padding: 10px 20px;
+    border-radius: 2px;
+
+    h4 {
+      font-size: 1.1em;
+      float: left;
+    }
+
+    h5 {
+      margin-top: 0.5rem;
+      margin-left: 0.5rem;
+      font-size: 1em;
+    }
+
+    &:nth-child(even) {
+      background: tint($sponge_grey, 98%);
+    }
+  }
+
+  .build-labels {
+    * {;
+      vertical-align: middle;
+
+      // Keep some space between multiple build labels
+      margin-left: 4px;
+
+      // Reduce font size and add more padding instead
+      font-size: 70%;
+      padding-top: 0.3em;
+      padding-bottom: 0.3em;
+    }
+
+    @include media-breakpoint-down(xs) {
+      display: block;
+      margin-top: 2px;
+    }
+  }
+
+  .artifacts {
+    float: right;
+    margin-bottom: 10px;
+    white-space: nowrap;
+    overflow: hidden;
+
+    .btn {
+      margin-left: 2px;
+    }
+
+    @include media-breakpoint-down(sm) {
+      float: left;
+      clear: left;
+
+      margin-top: 10px;
+    }
+  }
+
+  .build-time {
+    display: none;
+
+    float: right;
+    clear: right;
+
+    @include montserrat;
+
+    @include media-breakpoint-up(sm) {
+      display: block;
+    }
+  }
+
+</style>

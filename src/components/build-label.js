@@ -5,7 +5,7 @@ export default {
   },
   render(create) {
     return create(this.l.link ? 'a' : 'span', {
-      class: ['label', `label-${this.l.color}`],
+      class: ['badge', `badge-${this.l.color}`],
       attrs: {
         title: this.l.title,
         href: this.l.link,
