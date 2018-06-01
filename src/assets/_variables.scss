@@ -23,6 +23,8 @@ $font-size-base: 1rem;
 $primary:   $sponge_grey;
 $secondary: tint($sponge_grey, 50%);
 
+$navbar-dark-hover-color: $sponge_yellow;
+
 $theme-colors: ("forge": $spongeforge_color);
 
 @import "~bootswatch/dist/flatly/variables";
