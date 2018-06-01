@@ -19,8 +19,14 @@
   import bCol from 'bootstrap-vue/es/components/layout/col';
   import bButton from 'bootstrap-vue/es/components/button/button';
 
+  import fontawesome from '@fortawesome/fontawesome'
+  import faDownload from '@fortawesome/fontawesome-free-solid/faDownload'
+  import FontAwesomeIcon from '@fortawesome/vue-fontawesome'
+
   import {Platforms} from '../platforms'
   import PlatformLogo from './PlatformLogo.vue'
+
+  fontawesome.library.add(faDownload);
 
   export default {
     name: 'platforms',
@@ -31,6 +37,7 @@
     },
     components: {
       bContainer, bRow, bCol, bButton,
+      FontAwesomeIcon,
       PlatformLogo,
     }
   }

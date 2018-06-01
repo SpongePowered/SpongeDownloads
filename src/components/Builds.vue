@@ -32,9 +32,15 @@
 <script>
   import bButton from 'bootstrap-vue/es/components/button/button';
 
+  import fontawesome from '@fortawesome/fontawesome'
+  import faDownload from '@fortawesome/fontawesome-free-solid/faDownload'
+  import FontAwesomeIcon from '@fortawesome/vue-fontawesome'
+
   import RelativeTime from './relative-time'
   import BuildLabel from './build-label'
   import Commits from './Commits.vue'
+
+  fontawesome.library.add(faDownload);
 
   export default {
     name: 'builds',
@@ -53,6 +59,7 @@
     },
     components: {
       bButton,
+      FontAwesomeIcon,
       RelativeTime,
       BuildLabel,
       Commits,

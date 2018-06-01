@@ -104,6 +104,11 @@
   import bDropdown from 'bootstrap-vue/es/components/dropdown/dropdown';
   import bDropdownItem from 'bootstrap-vue/es/components/dropdown/dropdown-item';
 
+  import fontawesome from '@fortawesome/fontawesome'
+  import faChevronLeft from '@fortawesome/fontawesome-free-solid/faChevronLeft'
+  import faChevronRight from '@fortawesome/fontawesome-free-solid/faChevronRight'
+  import FontAwesomeIcon from '@fortawesome/vue-fontawesome'
+
   import 'core-js/fn/set';
   import 'core-js/fn/array/from';
   import 'core-js/fn/array/find';
@@ -114,6 +119,8 @@
   import {Platforms, BuildTypes, Labels} from '../platforms'
   import Builds from '../components/Builds.vue'
   import PlatformLogo from '../components/PlatformLogo.vue'
+
+  fontawesome.library.add(faChevronLeft, faChevronRight);
 
   export default {
     name: 'downloads',
@@ -366,6 +373,7 @@
     },
     components: {
       bContainer, bRow, bCol, bButton, bButtonGroup, bBadge, bDropdown, bDropdownItem,
+      FontAwesomeIcon,
       PlatformLogo,
       Builds,
     }
