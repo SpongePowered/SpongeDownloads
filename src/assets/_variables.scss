@@ -24,6 +24,10 @@ $primary:   $sponge_grey;
 $secondary: tint($sponge_grey, 50%);
 
 $navbar-dark-hover-color: $sponge_yellow;
+$dropdown-link-hover-color: $sponge_grey;
+$dropdown-link-hover-bg: $sponge_yellow;
+$dropdown-link-active-color: black;
+$dropdown-link-active-bg: $sponge_yellow;
 
 $theme-colors: ("forge": $spongeforge_color);
 

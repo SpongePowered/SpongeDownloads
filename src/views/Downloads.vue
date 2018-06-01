@@ -19,7 +19,7 @@
           </b-col>
           <b-col class="download-category" v-if="platform.category.versions">
             <h3>{{ platform.category.name }} version</h3>
-            <b-button-group>
+            <b-button-group id="versions">
               <b-button variant="primary"
                      v-for="version of platform.category.versions.current" :key="version"
                      :to="routeForCategory(version)">{{ version }}</b-button>
@@ -437,6 +437,17 @@
 
       .active {
         font-weight: bold;
+      }
+    }
+  }
+
+  #versions {
+    .btn.active {
+      color: black;
+      background-color: $sponge_yellow;
+
+      &:hover {
+        background-color: tint($sponge_yellow, 50%);
       }
     }
   }
