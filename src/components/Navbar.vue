@@ -50,21 +50,13 @@
   import bNavItem from 'bootstrap-vue/es/components/nav/nav-item';
   import bCollapse from 'bootstrap-vue/es/components/collapse/collapse';
 
-  import fontawesome from '@fortawesome/fontawesome'
-  import faChevronDown from '@fortawesome/fontawesome-free-solid/faChevronDown'
-  import faHome from '@fortawesome/fontawesome-free-solid/faHome'
-  import faComments from '@fortawesome/fontawesome-free-solid/faComments'
-  import faCode from '@fortawesome/fontawesome-free-solid/faCode'
-  import faBook from '@fortawesome/fontawesome-free-solid/faBook'
-  import faGraduationCap from '@fortawesome/fontawesome-free-solid/faGraduationCap'
-  import faPlug from '@fortawesome/fontawesome-free-solid/faPlug'
-  import faDownload from '@fortawesome/fontawesome-free-solid/faDownload'
-  import faComment from '@fortawesome/fontawesome-free-solid/faComment'
-  import FontAwesomeIcon from '@fortawesome/vue-fontawesome'
+  import {library as fontawesomeLibrary} from '@fortawesome/fontawesome-svg-core'
+  import {faChevronDown, faHome, faComments, faCode, faBook, faGraduationCap, faPlug, faDownload, faComment} from '@fortawesome/free-solid-svg-icons'
+  import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
 
   import {Platforms} from "../platforms";
 
-  fontawesome.library.add(faChevronDown, faHome, faComments, faCode, faBook, faGraduationCap, faPlug, faDownload, faComment);
+  fontawesomeLibrary.add(faChevronDown, faHome, faComments, faCode, faBook, faGraduationCap, faPlug, faDownload, faComment);
 
   export default {
     name: 'navbar',

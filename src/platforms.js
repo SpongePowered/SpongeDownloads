@@ -1,8 +1,4 @@
-import faDownload from '@fortawesome/fontawesome-free-solid/faDownload'
-import faCode from '@fortawesome/fontawesome-free-solid/faCode'
-import faGraduationCap from '@fortawesome/fontawesome-free-solid/faGraduationCap'
-import faArchive from '@fortawesome/fontawesome-free-solid/faArchive'
-import faWrench from '@fortawesome/fontawesome-free-solid/faWrench'
+import {faDownload, faCode, faGraduationCap, faArchive, faWrench} from '@fortawesome/free-solid-svg-icons'
 
 export const BuildTypes = [
   {
