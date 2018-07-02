@@ -2,7 +2,8 @@
   <main id="overview">
     <header>
       <b-container>
-        <h1>Downloads</h1>
+        <h1>Sponge</h1>
+        <h2>Downloads</h2>
       </b-container>
     </header>
 
@@ -27,11 +28,14 @@
   @import "../assets/variables";
 
   #overview {
+    text-align: center;
+
+    h1, h2 {
+      margin: 0;
+    }
+
     h1 {
-      @include media-breakpoint-down(sm) {
-        text-align: center;
-        font-size: 10vw;
-      }
+      font-size: 5rem;
     }
 
     header {
