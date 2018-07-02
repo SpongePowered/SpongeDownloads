@@ -15,7 +15,7 @@ npm run build
 ```
 
 ### Testing locally
-To start the development server at http://localhost:8080, run:
+To start the development server at http://localhost:8080/downloads, run:
 
 ```
 npm run serve
