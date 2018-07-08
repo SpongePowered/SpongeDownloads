@@ -22,6 +22,8 @@
               <font-awesome-icon icon="graduation-cap" fixed-width/> Javadocs</a></li>
             <li><a href="https://forums.spongepowered.org/c/plugins/plugin-releases">
               <font-awesome-icon icon="plug" fixed-width/> Plugins</a></li>
+            <li><a href="https://ore.spongepowered.org/">
+              <font-awesome-icon icon="cubes" fixed-width/> Ore <b>Beta</b></a></li>
             <li class="active"><a :href="baseUrl">
               <font-awesome-icon icon="download" fixed-width/> Downloads</a></li>
             <li><a href="https://www.spongepowered.org/chat">
