@@ -1,8 +1,7 @@
 {
-  "name": "SpongeDownloads",
-  "version": "0.1.0",
-  "license": "MIT",
   "private": true,
+  "name": "SpongeDownloads",
+  "license": "MIT",
   "homepage": "https://github.com/SpongePowered/SpongeDownloads#readme",
   "repository": {
     "type": "git",
