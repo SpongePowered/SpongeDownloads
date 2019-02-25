@@ -96,7 +96,7 @@ export const Platforms = {
       const forgeVersion = build.dependencies.forge;
       if (forgeVersion) {
         build.labels.push({
-          name: `Forge ${forgeVersion.split('.')[3]}`,
+          name: `Forge ${forgeVersion.split('.').pop()}`,
           color: 'forge',
           title: "Recommended Forge version",
           link: `https://files.minecraftforge.net/maven/net/minecraftforge/forge/index_${minecraftVersion}.html`
