@@ -20,10 +20,8 @@
               <font-awesome-icon icon="book" fixed-width/> Docs</a></li>
             <li><a href="https://jd.spongepowered.org">
               <font-awesome-icon icon="graduation-cap" fixed-width/> Javadocs</a></li>
-            <li><a href="https://forums.spongepowered.org/c/plugins/plugin-releases">
-              <font-awesome-icon icon="plug" fixed-width/> Plugins</a></li>
             <li><a href="https://ore.spongepowered.org/">
-               <img src="https://spongepowered.org/assets/img/icons/ore.svg" alt="" class="ore-nav"> Ore <sup>Beta</sup></a></li>
+               <img src="https://spongepowered.org/assets/img/icons/ore.svg" alt="" class="ore-nav"> Plugins (Ore)</a></li>
             <li class="active"><a :href="baseUrl">
               <font-awesome-icon icon="download" fixed-width/> Downloads</a></li>
             <li><a href="https://www.spongepowered.org/chat">
