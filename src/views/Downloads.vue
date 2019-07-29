@@ -155,7 +155,7 @@
     },
     computed: {
       sponsor: function () {
-        return Sponsors[Math.floor(Math.random() * Math.floor(2))];
+        return Sponsors[Math.floor(Math.random() * Math.floor(Sponsors.length))];
       }
     },
     methods: {
