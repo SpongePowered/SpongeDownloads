@@ -156,7 +156,7 @@
             src: window.outerWidth >= 576 ?
                     "/assets/images/zaphosting-large.png" :
                     "/assets/images/zaphosting-small.jpg",
-            href: "https://zap-hosting.com"
+            href: "https://zap-hosting.com/sponge"
           };
         } else {
           return {
