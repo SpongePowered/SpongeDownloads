@@ -5,3 +5,14 @@
 @import "base";
 @import "topbar";
 @import "header";
+
+
+#sponsor {
+  img {
+    height: 90px;
+
+    @include media-breakpoint-down(md) {
+      height: 50px;
+    }
+  }
+}

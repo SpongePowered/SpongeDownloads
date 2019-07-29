@@ -44,6 +44,14 @@
         </b-container>
       </div>
 
+      <div id="sponsor">
+        <b-container class="text-center">
+          <a :href="sponsor.href">
+            <b-img :src="sponsor.src" fluid alt="Sponsor Image"></b-img>
+          </a>
+        </b-container>
+      </div>
+
       <b-container>
         <div id="all-builds" v-if="builds.length > 0">
           <h3>All builds</h3>
@@ -103,6 +111,7 @@
   import bBadge from 'bootstrap-vue/es/components/badge/badge';
   import bDropdown from 'bootstrap-vue/es/components/dropdown/dropdown';
   import bDropdownItem from 'bootstrap-vue/es/components/dropdown/dropdown-item';
+  import bImg from 'bootstrap-vue/es/components/image/img'
 
   import {library as fontawesomeLibrary} from '@fortawesome/fontawesome-svg-core'
   import {faChevronLeft, faChevronRight} from '@fortawesome/free-solid-svg-icons'
@@ -138,6 +147,24 @@
     },
     watch: {
       $route: 'updateData'
+    },
+    computed: {
+      sponsor: function () {
+        let random = Math.floor(Math.random() * Math.floor(2));
+        if(random === 0) {
+          return {
+            src: window.outerWidth >= 576 ?
+                    "/assets/images/zaphosting-large.png" :
+                    "/assets/images/zaphosting-small.jpg",
+            href: "https://zap-hosting.com"
+          };
+        } else {
+          return {
+            src: "/assets/images/bisecthosting.svg",
+            href: "https://bisecthosting.com/sponge"
+          };
+        }
+      }
     },
     methods: {
       updateData() {
@@ -371,7 +398,7 @@
       }
     },
     components: {
-      bContainer, bRow, bCol, bButton, bButtonGroup, bBadge, bDropdown, bDropdownItem,
+      bContainer, bRow, bCol, bButton, bButtonGroup, bBadge, bDropdown, bDropdownItem, bImg,
       FontAwesomeIcon,
       PlatformLogo,
       Builds,
