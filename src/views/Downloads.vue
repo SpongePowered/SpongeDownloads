@@ -47,7 +47,10 @@
       <div id="sponsor">
         <b-container class="text-center">
           <a :href="sponsor.href">
-            <b-img :src="sponsor.src" fluid alt="Sponsor Image"></b-img>
+            <picture>
+              <source v-for="image in sponsor.images" v-bind:key="image.src" :media="image.media" :srcset="image.src">
+              <img :src="sponsor.images[0].src" :alt="sponsor.name" />
+            </picture>
           </a>
         </b-container>
       </div>
@@ -128,6 +131,8 @@
   import Builds from '../components/Builds.vue'
   import PlatformLogo from '../components/PlatformLogo.vue'
 
+  import Sponsors from '../../sponsors.json'
+
   fontawesomeLibrary.add(faChevronLeft, faChevronRight);
 
   export default {
@@ -150,20 +155,7 @@
     },
     computed: {
       sponsor: function () {
-        let random = Math.floor(Math.random() * Math.floor(2));
-        if(random === 0) {
-          return {
-            src: window.outerWidth >= 576 ?
-                    "/assets/images/zaphosting-large.png" :
-                    "/assets/images/zaphosting-small.jpg",
-            href: "https://zap-hosting.com/sponge"
-          };
-        } else {
-          return {
-            src: "/assets/images/bisecthosting.svg",
-            href: "https://bisecthosting.com/sponge"
-          };
-        }
+        return Sponsors[Math.floor(Math.random() * Math.floor(2))];
       }
     },
     methods: {
