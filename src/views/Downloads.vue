@@ -44,6 +44,18 @@
         </b-container>
       </div>
 
+      <div id="sponsor">
+        <b-container class="text-center">
+          <a :href="sponsor.link">
+            <picture>
+              <source v-for="image in sponsor.images" v-bind:key="image.src" :media="image.media"
+                      :srcset="withBaseUrl(image.src)">
+              <img :src="withBaseUrl(sponsor.images[0].src)" :alt="sponsor.name" />
+            </picture>
+          </a>
+        </b-container>
+      </div>
+
       <b-container>
         <div id="all-builds" v-if="builds.length > 0">
           <h3>All builds</h3>
@@ -103,6 +115,7 @@
   import bBadge from 'bootstrap-vue/es/components/badge/badge';
   import bDropdown from 'bootstrap-vue/es/components/dropdown/dropdown';
   import bDropdownItem from 'bootstrap-vue/es/components/dropdown/dropdown-item';
+  import bImg from 'bootstrap-vue/es/components/image/img'
 
   import {library as fontawesomeLibrary} from '@fortawesome/fontawesome-svg-core'
   import {faChevronLeft, faChevronRight} from '@fortawesome/free-solid-svg-icons'
@@ -118,6 +131,8 @@
   import {Platforms, BuildTypes, Labels} from '../platforms'
   import Builds from '../components/Builds.vue'
   import PlatformLogo from '../components/PlatformLogo.vue'
+
+  import Sponsors from '../../sponsors.json'
 
   fontawesomeLibrary.add(faChevronLeft, faChevronRight);
 
@@ -139,7 +154,15 @@
     watch: {
       $route: 'updateData'
     },
+    computed: {
+      sponsor() {
+        return Sponsors[Math.floor(Math.random() * Sponsors.length)];
+      }
+    },
     methods: {
+      withBaseUrl(url) {
+        return (process.env.BASE_URL || '/') + url;
+      },
       updateData() {
         this.platform = Platforms[this.$route.params.project];
 
@@ -371,7 +394,7 @@
       }
     },
     components: {
-      bContainer, bRow, bCol, bButton, bButtonGroup, bBadge, bDropdown, bDropdownItem,
+      bContainer, bRow, bCol, bButton, bButtonGroup, bBadge, bDropdown, bDropdownItem, bImg,
       FontAwesomeIcon,
       PlatformLogo,
       Builds,
