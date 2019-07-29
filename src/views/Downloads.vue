@@ -155,12 +155,12 @@
       $route: 'updateData'
     },
     computed: {
-      sponsor: function () {
-        return Sponsors[Math.floor(Math.random() * Math.floor(Sponsors.length))];
+      sponsor() {
+        return Sponsors[Math.floor(Math.random() * Sponsors.length)];
       }
     },
     methods: {
-      withBaseUrl: function (url) {
+      withBaseUrl(url) {
         return (process.env.BASE_URL || '/') + url;
       },
       updateData() {
