@@ -46,10 +46,11 @@
 
       <div id="sponsor">
         <b-container class="text-center">
-          <a :href="sponsor.href">
+          <a :href="sponsor.link">
             <picture>
-              <source v-for="image in sponsor.images" v-bind:key="image.src" :media="image.media" :srcset="image.src">
-              <img :src="sponsor.images[0].src" :alt="sponsor.name" />
+              <source v-for="image in sponsor.images" v-bind:key="image.src" :media="image.media"
+                      :srcset="(baseUrl || '/') + image.src">
+              <img :src="(baseUrl || '/') + sponsor.images[0].src" :alt="sponsor.name" />
             </picture>
           </a>
         </b-container>
@@ -156,6 +157,9 @@
     computed: {
       sponsor: function () {
         return Sponsors[Math.floor(Math.random() * Math.floor(Sponsors.length))];
+      },
+      baseUrl: function () {
+        return process.env.BASE_URL;
       }
     },
     methods: {
