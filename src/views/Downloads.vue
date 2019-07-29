@@ -49,8 +49,8 @@
           <a :href="sponsor.link">
             <picture>
               <source v-for="image in sponsor.images" v-bind:key="image.src" :media="image.media"
-                      :srcset="(baseUrl || '/') + image.src">
-              <img :src="(baseUrl || '/') + sponsor.images[0].src" :alt="sponsor.name" />
+                      :srcset="withBaseUrl(image.src)">
+              <img :src="withBaseUrl(sponsor.images[0].src)" :alt="sponsor.name" />
             </picture>
           </a>
         </b-container>
@@ -157,12 +157,12 @@
     computed: {
       sponsor: function () {
         return Sponsors[Math.floor(Math.random() * Math.floor(Sponsors.length))];
-      },
-      baseUrl: function () {
-        return process.env.BASE_URL;
       }
     },
     methods: {
+      withBaseUrl: function (url) {
+        return (process.env.BASE_URL || '/') + url;
+      },
       updateData() {
         this.platform = Platforms[this.$route.params.project];
 
