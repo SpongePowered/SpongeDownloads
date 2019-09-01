@@ -1,13 +1,5 @@
 [
   {
-    "name": "ZapHosting",
-    "images": [
-      {"media": "(min-width: 577px)", "src": "assets/img/sponsors/zaphosting-large.png"},
-      {"media": "(max-width: 576px)", "src": "assets/img/sponsors/zaphosting-small.jpg"}
-    ],
-    "link": "https://zap-hosting.com/sponge"
-  },
-  {
     "name": "BisectHosting",
     "images": [
       {"src": "assets/img/sponsors/bisecthosting.svg"}
