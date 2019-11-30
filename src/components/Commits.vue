@@ -25,8 +25,7 @@
 </template>
 
 <script>
-  import bCollapse from 'bootstrap-vue/es/components/collapse/collapse';
-  import vBToggle from 'bootstrap-vue/es/directives/toggle/toggle';
+  import {BCollapse, VBToggle} from 'bootstrap-vue'
 
   import EllipsisButton from './EllipsisButton'
   import RelativeTime from './relative-time'
@@ -49,12 +48,12 @@
       }
     },
     components: {
-      bCollapse,
+      'b-collapse': BCollapse,
       EllipsisButton,
       RelativeTime,
     },
     directives: {
-      'b-toggle': vBToggle,
+      'b-toggle': VBToggle,
     }
   }
 </script>

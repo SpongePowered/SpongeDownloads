@@ -30,7 +30,7 @@
 </template>
 
 <script>
-  import bButton from 'bootstrap-vue/es/components/button/button';
+  import {BButton} from 'bootstrap-vue';
 
   import {library as fontawesomeLibrary} from '@fortawesome/fontawesome-svg-core'
   import {faDownload} from '@fortawesome/free-solid-svg-icons'
@@ -58,7 +58,7 @@
       }
     },
     components: {
-      bButton,
+      'b-buttom': BButton,
       FontAwesomeIcon,
       RelativeTime,
       BuildLabel,

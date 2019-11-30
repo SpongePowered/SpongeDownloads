@@ -107,15 +107,7 @@
 </template>
 
 <script>
-  import bContainer from 'bootstrap-vue/es/components/layout/container';
-  import bRow from 'bootstrap-vue/es/components/layout/row';
-  import bCol from 'bootstrap-vue/es/components/layout/col';
-  import bButton from 'bootstrap-vue/es/components/button/button';
-  import bButtonGroup from 'bootstrap-vue/es/components/button-group/button-group';
-  import bBadge from 'bootstrap-vue/es/components/badge/badge';
-  import bDropdown from 'bootstrap-vue/es/components/dropdown/dropdown';
-  import bDropdownItem from 'bootstrap-vue/es/components/dropdown/dropdown-item';
-  import bImg from 'bootstrap-vue/es/components/image/img'
+  import {BContainer, BRow, BCol, BButton, BButtonGroup, BBadge, BDropdown, BDropdownItem, BImg} from 'bootstrap-vue'
 
   import {library as fontawesomeLibrary} from '@fortawesome/fontawesome-svg-core'
   import {faChevronLeft, faChevronRight} from '@fortawesome/free-solid-svg-icons'
@@ -394,7 +386,15 @@
       }
     },
     components: {
-      bContainer, bRow, bCol, bButton, bButtonGroup, bBadge, bDropdown, bDropdownItem, bImg,
+      'b-container': BContainer,
+      'b-row': BRow,
+      'b-col': BCol,
+      'b-button': BButton,
+      'b-button-group': BButtonGroup,
+      'b-badge': BBadge,
+      'b-dropdown': BDropdown,
+      'b-dropdown-item': BDropdownItem,
+      'b-img': BImg,
       FontAwesomeIcon,
       PlatformLogo,
       Builds,
