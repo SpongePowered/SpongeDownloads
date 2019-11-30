@@ -58,7 +58,7 @@
       }
     },
     components: {
-      'b-buttom': BButton,
+      'b-button': BButton,
       FontAwesomeIcon,
       RelativeTime,
       BuildLabel,

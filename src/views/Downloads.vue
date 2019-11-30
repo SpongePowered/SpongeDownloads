@@ -52,6 +52,7 @@
                       :srcset="withBaseUrl(image.src)">
               <img :src="withBaseUrl(sponsor.images[0].src)" :alt="sponsor.name" />
             </picture>
+            <p v-if="sponsor.additionalText" class="additonalText">{{ sponsor.additionalText }}</p>
           </a>
         </b-container>
       </div>
