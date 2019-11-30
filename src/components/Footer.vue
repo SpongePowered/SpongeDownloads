@@ -12,12 +12,12 @@
 </template>
 
 <script>
-  import bContainer from 'bootstrap-vue/es/components/layout/container';
+  import {BContainer} from 'bootstrap-vue';
 
   export default {
     name: 'the-footer',
     components: {
-      bContainer
+      'b-container': BContainer
     }
   }
 </script>

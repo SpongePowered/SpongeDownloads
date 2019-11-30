@@ -4,6 +4,7 @@
     "images": [
       {"src": "assets/img/sponsors/bisecthosting.svg"}
     ],
-    "link": "https://bisecthosting.com/sponge"
+    "link": "https://bisecthosting.com/sponge",
+    "additionalText": "New clients can save 25% off BisectHosting game servers their first month using the promo code 'sponge'"
   }
 ]

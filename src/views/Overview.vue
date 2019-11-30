@@ -12,13 +12,13 @@
 </template>
 
 <script>
-  import bContainer from 'bootstrap-vue/es/components/layout/container';
+  import {BContainer} from 'bootstrap-vue/esm/components/layout/container';
   import Platforms from '../components/Platforms.vue'
 
   export default {
     name: 'overview',
     components: {
-      bContainer,
+      'b-container': BContainer,
       Platforms,
     }
   }

@@ -43,12 +43,7 @@
 </template>
 
 <script>
-  import bContainer from 'bootstrap-vue/es/components/layout/container';
-  import bNavbar from 'bootstrap-vue/es/components/navbar/navbar';
-  import bNavbarNav from 'bootstrap-vue/es/components/navbar/navbar-nav';
-  import bNavbarToggle from 'bootstrap-vue/es/components/navbar/navbar-toggle';
-  import bNavItem from 'bootstrap-vue/es/components/nav/nav-item';
-  import bCollapse from 'bootstrap-vue/es/components/collapse/collapse';
+  import {BContainer, BNavbar, BNavbarNav, BNavbarToggle, BNavItem, BCollapse} from 'bootstrap-vue'
 
   import {library as fontawesomeLibrary} from '@fortawesome/fontawesome-svg-core'
   import {faChevronDown, faHome, faComments, faCode, faBook, faGraduationCap, faPlug, faDownload, faComment} from '@fortawesome/free-solid-svg-icons'
@@ -71,7 +66,12 @@
       }
     },
     components: {
-      bContainer, bNavbar, bNavbarNav, bNavbarToggle, bNavItem, bCollapse,
+      'b-container': BContainer,
+      'b-navbar': BNavbar,
+      'b-navbar-nav': BNavbarNav,
+      'b-navbar-toggle': BNavbarToggle,
+      'b-nav-item': BNavItem,
+      'b-collapse': BCollapse,
       FontAwesomeIcon,
     }
   }

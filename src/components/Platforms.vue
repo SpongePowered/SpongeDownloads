@@ -14,10 +14,7 @@
 </template>
 
 <script>
-  import bContainer from 'bootstrap-vue/es/components/layout/container';
-  import bRow from 'bootstrap-vue/es/components/layout/row';
-  import bCol from 'bootstrap-vue/es/components/layout/col';
-  import bButton from 'bootstrap-vue/es/components/button/button';
+  import {BContainer, BRow, BCol, BButton} from 'bootstrap-vue'
 
   import {library as fontawesomeLibrary} from '@fortawesome/fontawesome-svg-core'
   import {faDownload} from '@fortawesome/free-solid-svg-icons'
@@ -36,7 +33,10 @@
       }
     },
     components: {
-      bContainer, bRow, bCol, bButton,
+      'b-container': BContainer,
+      'b-row': BRow,
+      'b-col': BCol,
+      'b-button': BButton,
       FontAwesomeIcon,
       PlatformLogo,
     }
