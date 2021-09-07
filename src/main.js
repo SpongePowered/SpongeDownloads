@@ -7,7 +7,7 @@ import axios from 'axios';
 import './assets/main.scss'
 
 // Axios
-axios.defaults.baseURL = process.env.VUE_APP_API_URL || "https://dl-api.spongepowered.org/v1/";
+axios.defaults.baseURL = process.env.VUE_APP_API_URL || "https://staging-dl-api.spongeproject.net/api/v2/";
 
 new Vue({
   router,

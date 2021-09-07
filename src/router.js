@@ -17,18 +17,8 @@ const router = new Router({
       component: Overview
     },
     {
-      name: 'downloads-project',
-      path: '/:project',
-      component: Downloads
-    },
-    {
-      name: 'downloads-build-type',
-      path: '/:project/:buildType',
-      component: Downloads
-    },
-    {
       name: 'downloads',
-      path: '/:project/:buildType/:category',
+      path: '/:project',
       component: Downloads
     }
   ]

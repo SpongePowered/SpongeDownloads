@@ -1,28 +1,15 @@
 <template>
+  <!-- eslint-disable -->
   <ol class="builds">
-    <li v-for="build in builds" :key="build.version" class="build" :id="build.version">
-      <h4>{{ build.version }}
-        <span class="build-labels"><build-label v-for="label in build.labels" :key="label.name" :l="label"/></span>
+    <li v-for="(build, key) in builds" :key="key" class="build" :id="key">
+
+      <h4>{{ key }}
+        <span class="build-labels">
+          <build-label v-if="build.recommended" :l="recommendedLabel"/>
+        </span>
       </h4>
 
-      <div class="artifacts">
-        <b-button v-for="artifact in build.artifacts" :key="artifact.classifier"
-               :variant="artifact.primary ? 'primary' : ''" :size="btnSize"
-               :href="artifact.url" :title="artifact.type.title">
-          <font-awesome-icon :icon="artifact.type.icon"/>
-          <span> {{ artifact.primary ? 'Download' : artifact.type.name }}</span></b-button>
-      </div>
-
-      <relative-time class="build-time" :t="build.published"/>
-
-      <div class="changelog" v-if="!primary || build.changelog">
-        <commits :project="platform" :l="build.changelog"
-                 v-if="build.changelog && build.changelog.length > 0"/>
-        <div class="changelog-comment" v-else>
-          <span v-if="build.changelog">No changes.</span>
-          <span v-else>No changelog available.</span>
-        </div>
-      </div>
+      <!-- artifacts -->
 
       <div class="clearfix"></div>
     </li>
@@ -39,6 +26,7 @@
   import RelativeTime from './relative-time'
   import BuildLabel from './build-label'
   import Commits from './Commits.vue'
+  import {Labels} from "../platforms";
 
   fontawesomeLibrary.add(faDownload);
 
@@ -46,7 +34,7 @@
     name: 'builds',
     props: {
       platform: String,
-      builds: Array,
+      builds: Object,
       primary: {
         type: Boolean,
         default: false
@@ -55,6 +43,9 @@
     computed: {
       btnSize() {
         return this.primary ? '' : 'sm'
+      },
+      recommendedLabel() {
+        return Labels.recommended;
       }
     },
     components: {

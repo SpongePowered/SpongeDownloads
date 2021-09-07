@@ -4,7 +4,7 @@
       <b-col v-for="platform in platforms" :key="platform.id">
         <h3><platform-logo :platform="platform"/></h3>
         <p class="description">{{ platform.description }}</p>
-        <b-button variant="primary" :to="{name: 'downloads-project', params: {project: platform.id}}">
+        <b-button variant="primary" :to="{name: 'downloads', params: {project: platform.id}}">
           <font-awesome-icon icon="download"/> Download
         </b-button>
         <p class="recommendation">{{ platform.recommendation }}</p>

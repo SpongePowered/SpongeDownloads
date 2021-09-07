@@ -1,3 +1,4 @@
+<!-- eslint-disable -->
 <template>
   <main id="downloads">
     <header>
@@ -8,28 +9,17 @@
               <h1><platform-logo :platform="platform"/></h1>
             </div>
           </b-col>
-          <b-col class="download-category" v-if="platform.buildTypes">
-            <h3>Build type</h3>
-            <ul id="build-types">
-              <li v-for="type in platform.buildTypes" :key="type.id">
-                <b-badge :variant="type.color" :to="routeForBuildType(type)">
-                  <span>{{ type.name }}</span></b-badge>
-              </li>
-            </ul>
-          </b-col>
-          <b-col class="download-category" v-if="platform.category.versions">
-            <h3>{{ platform.category.name }} version</h3>
+          <b-col class="download-category" v-if="platform.loaded" v-for="tag in platform.tags">
+            <h3>{{ tag.name }} version</h3>
             <b-button-group id="versions">
-              <b-button variant="primary"
-                     v-for="version of platform.category.versions.current" :key="version"
-                     :to="routeForCategory(version)">{{ version }}</b-button>
-              <b-dropdown variant="primary" right v-if="platform.category.versions.unsupported.length > 0">
-                <b-dropdown-item v-for="version of platform.category.versions.unsupported" :key="version"
-                                 :to="routeForCategory(version)">{{ version }}</b-dropdown-item>
+              <b-button variant="primary" class="active">{{ tag.current }}</b-button>
+              <b-dropdown variant="primary" right>
+                <b-dropdown-item v-for="version of tag.versions" :key="version">
+                  {{ version }}
+                </b-dropdown-item>
               </b-dropdown>
             </b-button-group>
           </b-col>
-
           <!-- Empty column to avoid having platform logo centered -->
           <b-col v-else />
         </b-row>
@@ -39,8 +29,8 @@
     <section id="builds" v-if="builds">
       <div id="recommended-build" v-if="recommended">
         <b-container>
-          <h3>{{ recommended.label.title }}</h3>
-          <builds :platform="platform.name" :builds="[recommended]" primary/>
+          <h3>Latest Recommended Build</h3>
+          <builds :platform="platform.name" :builds="recommended.artifacts" primary/>
         </b-container>
       </div>
 
@@ -58,40 +48,20 @@
       </div>
 
       <b-container>
-        <div id="all-builds" v-if="builds.length > 0">
+        <div id="all-builds" v-if="builds">
           <h3>All builds</h3>
-          <builds :platform="platform.name" :builds="builds"/>
+          <builds :platform="platform.name" :builds="builds.artifacts"/>
         </div>
 
         <div id="no-builds" v-else-if="!recommended">
           <h3>No builds available for the current selection</h3>
-          <strong>Possible solutions:</strong>
-          <ul>
-            <li v-for="type in getAlternativeBuildTypes()" :key="type.id">
-              <router-link :to="adaptRouteForBuildType(type)"
-              >Search for <span :class="['label', 'label-' + type.color]">{{ type.name }}</span> builds.
-              </router-link>
-            </li>
-            <li v-if="$route.query.until">
-              <router-link :to="{query: {since: $route.query.until}}"
-              >Search for newer builds.
-              </router-link>
-            </li>
-            <li v-if="$route.query.since">
-              <router-link :to="{query: {until: $route.query.since}}"
-              >Search for older builds.
-              </router-link>
-            </li>
-          </ul>
         </div>
 
-        <div class="navigation" v-if="builds.length > 0">
-          <b-button class="newer" size="sm" active-class=""
-                 v-if="$route.query.until || $route.query.since" :to="{query: {since: builds[0].published}}">
+        <div class="navigation" v-if="builds">
+          <b-button class="newer" v-if="$route.query.offset" size="sm" active-class="">
             <font-awesome-icon icon="chevron-left"/> Newer
           </b-button>
-          <b-button class="older" size="sm" active-class=""
-                 v-if="builds.length >= 9" :to="{query: {until: builds[builds.length-1].published}}">
+          <b-button class="older" size="sm" active-class="" v-if="builds.size > 10">
             Older <font-awesome-icon icon="chevron-right"/>
           </b-button>
           <div class="clearfix"></div>
@@ -108,6 +78,7 @@
 </template>
 
 <script>
+/* eslint-disable */
   import {BContainer, BRow, BCol, BButton, BButtonGroup, BBadge, BDropdown, BDropdownItem, BImg} from 'bootstrap-vue'
 
   import {library as fontawesomeLibrary} from '@fortawesome/fontawesome-svg-core'
@@ -121,7 +92,7 @@
 
   import axios from 'axios';
 
-  import {Platforms, BuildTypes, Labels} from '../platforms'
+  import {Platforms, Labels} from '../platforms'
   import Builds from '../components/Builds.vue'
   import PlatformLogo from '../components/PlatformLogo.vue'
 
@@ -138,14 +109,18 @@
         loadingRecommended: false,
         platform: null,
         builds: null,
-        recommended: null
+        recommended: null,
       }
     },
     created() {
       this.updateData()
     },
     watch: {
-      $route: 'updateData'
+      $route: {
+        handler: 'updateData',
+        deep: true,
+        immediate: true
+      }
     },
     computed: {
       sponsor() {
@@ -159,231 +134,87 @@
       updateData() {
         this.platform = Platforms[this.$route.params.project];
 
-        // Redirect to default build type and category if not explicitly specified
-        if (this.redirectToDefaultVersion()) {
-          return
-        }
-
         this.builds = null;
         this.recommended = null;
         this.loading = true;
-        this.loadingRecommended = false;
+        this.loadingRecommended = true;
 
         if (this.platform.loaded) {
+          this.redirectToDefaultVersion();
           this.fetchBuilds()
         } else {
           this.fetchPlatform()
         }
       },
       fetchPlatform() {
-        axios.get(`/${this.platform.group}/${this.platform.id}`).then(response => {
-          const project = response.data;
+        axios.get(`/groups/${this.platform.group}/artifacts/${this.platform.id}`).then(response => {
+          const tags = response.data.tags || [];
 
-          const buildTypes = [], buildTypesData = {};
+          axios.get(`/groups/${this.platform.group}/artifacts/${this.platform.id}/latest?recommended=true`).then(response => {
+            const recommended = response.data;
 
-          const currentCategoryVersions = new Set(this.platform.category.forProject(project));
-          const unsupportedCategoryVersions = new Set(currentCategoryVersions);
-
-          for (const type of BuildTypes) {
-            if (!(type.id in project.buildTypes)) {
-              continue
+            for (const [index, tag] of Object.entries(this.platform.tags)) {
+              tag.versions = tags[index];
             }
 
-            buildTypes.push(type);
+            this.$set(this.platform, 'latestRecommended', recommended);
+            this.$set(this.platform, 'loaded', true);
 
-            const data = project.buildTypes[type.id];
-            const buildTypeData = {
-              type: type,
-            };
-
-            if (data.recommended) {
-              buildTypeData.recommended = {}
-            }
-
-            buildTypesData[type.id] = buildTypeData;
-
-            const category = this.platform.category.forBuild(data.latest);
-            if (category) {
-              buildTypeData.categoryVersion = category;
-              unsupportedCategoryVersions.delete(category);
-            }
-          }
-
-          const unsupportedCategoryVersionsArray = Array.from(unsupportedCategoryVersions);
-
-          for (const version of unsupportedCategoryVersionsArray) {
-            currentCategoryVersions.delete(version)
-          }
-
-          this.platform.buildTypes = buildTypes;
-
-          // Vue does not support iterating over sets currently, https://github.com/vuejs/vue/issues/2410
-          this.platform.category.versions = {
-            current: Array.from(currentCategoryVersions),
-            unsupported: unsupportedCategoryVersionsArray
-          };
-
-          this.platform.buildTypesData = buildTypesData;
-          this.platform.loaded = true;
-
-          if (!this.redirectToDefaultVersion()) {
-            this.fetchBuilds()
-          }
-        }, () => console.log("ERROR"))
+            this.redirectToDefaultVersion()
+          }, () => console.log(`Error while fetching the latest recommended version for the platform ${this.platform.id}`))
+        }, () => console.log(`Error while fetching the platform ${this.platform.id}`))
       },
       fetchBuilds() {
-        const params = {
-          type: this.$route.params.buildType,
-        };
+        axios.get(`/groups/${this.platform.group}/artifacts/${this.platform.id}/versions?recommended=true&limit=1&tags=${this.buildAPITagsQuery()}`).then(response => {
+          this.recommended = response.data;
+          this.loadingRecommended = false;
+        }, (error) => {
+          if (error.response && error.response.status === 404) this.loadingRecommended = false;
+          else console.log(`Error while fetching the latest recommended version for the platform ${this.platform.id} and tags ${this.buildAPITagsQuery()}`)
+        })
 
-        params[this.platform.category.id] = this.$route.params.category;
-
-        const buildTypeData = this.platform.buildTypesData[this.$route.params.buildType];
-
-        // Load recommended build (if necessary)
-        const showRecommended = !this.$route.query.until && !this.$route.query.since;
-        if (showRecommended && buildTypeData.recommended) {
-          const recommendedBuild = buildTypeData.recommended[this.$route.params.category];
-
-          if (recommendedBuild == null) {
-            this.loadingRecommended = true;
-            axios.get(`/${this.platform.group}/${this.platform.id}/downloads/recommended`, {params: params}).then(response => {
-              const recommendedBuild = response.data;
-
-              recommendedBuild.label = Labels.recommended;
-              recommendedBuild.labels = [buildTypeData.type, Labels.recommended];
-              this.platform.addLabels && this.platform.addLabels(recommendedBuild);
-              this.readArtifacts(recommendedBuild);
-
-              buildTypeData.recommended[this.$route.params.category] = recommendedBuild;
-              this.recommended = recommendedBuild;
-              this.loadingRecommended = false;
-            }, response => {
-              if (response.status == 404) {
-                // No recommended build available
-                buildTypeData.recommended[this.$route.params.category] = false;
-                this.loadingRecommended = false;
-                this.markLatestBuild(this.builds)
-              }
-
-              console.log("ERROR")
-            })
-          } else if (recommendedBuild) {
-            this.recommended = recommendedBuild
-          }
-        }
-
-        params.changelog = true;
-        params.until = this.$route.query.until;
-        params.since = this.$route.query.since;
-
-        axios.get(`/${this.platform.group}/${this.platform.id}/downloads`, {params: params}).then(response => {
-          const unsupported = this.platform.category.versions.unsupported.includes(this.$route.params.category)
-              && Labels.unsupported;
-
-          const builds = response.data;
-          for (const build of builds) {
-            build.labels = [buildTypeData.type];
-
-            if (unsupported) {
-              build.labels.push(unsupported)
-            } else if (build.label) {
-              if (build.label in Labels) {
-                build.labels.push(Labels[build.label])
-              } else {
-                console.log(`Unknown label: ${build.label}`)
-              }
-            }
-
-            this.platform.addLabels && this.platform.addLabels(build);
-            this.readArtifacts(build)
-          }
-
-          if (showRecommended) {
-            this.markLatestBuild(builds)
-          }
-
+        this.fetchBuildsPage();
+      },
+      fetchBuildsPage(limit=10, offset=0) {
+        axios.get(`/groups/${this.platform.group}/artifacts/${this.platform.id}/versions?tags=${this.buildAPITagsQuery()}&offset=${offset}&limit=${limit}`).then(response => {
+          this.builds = response.data;
           this.loading = false;
-          this.builds = builds
-        }, () => console.log("ERROR"))
-      },
-      readArtifacts(build) {
-        const artifacts = [];
-
-        let first = true;
-        for (const type of this.platform.artifactTypes) {
-          if (type.classifier in build.artifacts) {
-            const artifact = build.artifacts[type.classifier];
-            artifact.type = type;
-            artifact.primary = first;
-            artifacts.push(artifact)
-          }
-
-          first = false
-        }
-
-        build.artifacts = artifacts
-      },
-      markLatestBuild(builds) {
-        if (this.loadingRecommended || this.recommended || !builds || builds.length == 0) {
-          return
-        }
-
-        if (builds[0].label) {
-          // Don't mark builds with a label
-          return
-        }
-
-        const latestBuild = builds.shift();
-
-        latestBuild.label = Labels.latest;
-        latestBuild.labels.push(Labels.latest);
-
-        this.recommended = latestBuild;
-      },
-      routeForBuildType(buildType) {
-        return {
-          name: 'downloads-build-type', params: {
-            project: this.platform.id,
-            buildType: buildType.id
-          }
-        }
-      },
-      adaptRouteForBuildType(buildType) {
-        return {
-          name: 'downloads', params: {
-            project: this.platform.id,
-            buildType: buildType.id,
-            category: this.$route.params.category
-          }, query: this.$route.query
-        }
-      },
-      routeForCategory(category) {
-        return {
-          name: 'downloads', params: {
-            project: this.platform.id,
-            buildType: this.$route.params.buildType,
-            category: category
-          }
-        }
+        }, () => console.log(`Error while fetching the versions for the platform ${this.platform.id} and tags ${this.buildAPITagsQuery()}`))
       },
       redirectToDefaultVersion() {
-        if (this.platform.loaded && (!this.$route.params.buildType || !this.$route.params.category)) {
-          const buildType = this.$route.params.buildType || this.platform.buildTypes[0].id;
-          this.$router.replace({
-            name: 'downloads', params: {
-              project: this.platform.id,
-              buildType: buildType,
-              category: this.$route.params.category || this.platform.buildTypesData[buildType].categoryVersion
+        if (this.platform.loaded) {
+          let individual = false;
+
+          for (const [index,] of Object.entries(this.platform.tags)) {
+            if (this.$route.query.hasOwnProperty(index)) {
+              this.$set(this.platform.tags[index], 'current', this.$route.query[index]);
+              individual = true;
             }
+          }
+
+          if(individual) {
+            this.fetchBuilds();
+            return false;
+          }
+
+          this.$router.push({
+            name: 'downloads',
+            params: {project: this.platform.id},
+            query: this.platform.latestRecommended.tags
           });
           return true
-        } else {
-          return false
         }
       },
-      getAlternativeBuildTypes() {
-        return this.platform.buildTypes.filter(type => type.id != this.$route.params.buildType);
+      buildAPITagsQuery() {
+        let currentQuery = "";
+
+        for (const [index,value] of Object.entries(this.platform.tags)) {
+          if (value.current != null) {
+           currentQuery += index + ":" + value.current + ",";
+          }
+        }
+
+        return currentQuery;
       }
     },
     components: {

@@ -35,7 +35,7 @@
       <b-collapse is-nav id="main-navbar-collapse">
         <b-navbar-nav class="ml-auto">
           <b-nav-item v-for="platform in platforms" :key="platform.id"
-                      :to="{name: 'downloads-project', params: {project: platform.id}}">{{ platform.name }}</b-nav-item>
+                      :to="{name: 'downloads', params: {project: platform.id}}">{{ platform.name }}</b-nav-item>
         </b-navbar-nav>
       </b-collapse>
     </b-container>
