@@ -30,7 +30,7 @@
       <div id="recommended-build" v-if="recommended">
         <b-container>
           <h3>Latest Recommended Build</h3>
-          <builds :platform="platform.name" :builds="recommended.artifacts" primary/>
+          <builds :platform="platform.name" :builds="recommended" primary/>
         </b-container>
       </div>
 
@@ -50,7 +50,7 @@
       <b-container>
         <div id="all-builds" v-if="builds">
           <h3>All builds</h3>
-          <builds :platform="platform.name" :builds="builds.artifacts"/>
+          <builds :platform="platform.name" :builds="builds"/>
         </div>
 
         <div id="no-builds" v-else-if="!recommended">
@@ -164,22 +164,44 @@
           }, () => console.log(`Error while fetching the latest recommended version for the platform ${this.platform.id}`))
         }, () => console.log(`Error while fetching the platform ${this.platform.id}`))
       },
+      fetchVersions(response, completeCallback, failureCallback) {
+          const keys = Object.keys(response.data.artifacts);
+          // For each key, we need to make an AJAX call...
+          let futures = new Array(); // AxiosPromises
+          keys.forEach(element => futures.push(axios.get(`/groups/${this.platform.group}/artifacts/${this.platform.id}/versions/${element}`)));
+          Promise.all(futures).then(r => {
+            // My JS is terrible, but this should do...
+            let result = {};
+            r.forEach(r1 => {
+              let value = {};
+              value.recommended = r1.data.recommended;
+              value.asset = r1.data.assets.filter(x => (x.classifier === "" || x.classifier === "universal") && x.extension === "jar")[0]
+              result[r1.data.coordinates.version] = value;
+            });
+            completeCallback(result);
+          }, failureCallback)
+      },
       fetchBuilds() {
-        axios.get(`/groups/${this.platform.group}/artifacts/${this.platform.id}/versions?recommended=true&limit=1&tags=${this.buildAPITagsQuery()}`).then(response => {
-          this.recommended = response.data;
-          this.loadingRecommended = false;
-        }, (error) => {
+        const errorCallback = (error) => {
           if (error.response && error.response.status === 404) this.loadingRecommended = false;
           else console.log(`Error while fetching the latest recommended version for the platform ${this.platform.id} and tags ${this.buildAPITagsQuery()}`)
-        })
-
+        };
+        axios.get(`/groups/${this.platform.group}/artifacts/${this.platform.id}/versions?recommended=true&limit=1&tags=${this.buildAPITagsQuery()}`)
+          .then(result => this.fetchVersions(result, this.updateBuilds, errorCallback), errorCallback);
         this.fetchBuildsPage();
       },
+      updateBuilds(result) {
+          this.recommended = result;
+          this.loadingRecommended = false;
+      },
       fetchBuildsPage(limit=10, offset=0) {
-        axios.get(`/groups/${this.platform.group}/artifacts/${this.platform.id}/versions?tags=${this.buildAPITagsQuery()}&offset=${offset}&limit=${limit}`).then(response => {
-          this.builds = response.data;
+        const errorCallback = () => console.log(`Error while fetching the versions for the platform ${this.platform.id} and tags ${this.buildAPITagsQuery()}`);
+        axios.get(`/groups/${this.platform.group}/artifacts/${this.platform.id}/versions?tags=${this.buildAPITagsQuery()}&offset=${offset}&limit=${limit}`)
+          .then(result => this.fetchVersions(result, this.updateBuildsPage, errorCallback), errorCallback);
+      },
+      updateBuildsPage(result) {
+          this.builds = result;
           this.loading = false;
-        }, () => console.log(`Error while fetching the versions for the platform ${this.platform.id} and tags ${this.buildAPITagsQuery()}`))
       },
       redirectToDefaultVersion() {
         if (this.platform.loaded) {

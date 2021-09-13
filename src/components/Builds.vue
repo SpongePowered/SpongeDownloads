@@ -9,6 +9,14 @@
         </span>
       </h4>
 
+      <div class="artifacts">
+      <!-- artifacts -->
+        <b-button :key=""
+               :variant="'primary'" :size="btnSize"
+               :href="build.asset.downloadUrl" :title="Download">
+          <!--<font-awesome-icon :icon="artifact.type.icon"/>-->
+          <span>Download</span></b-button>
+      </div>
       <!-- artifacts -->
 
       <div class="clearfix"></div>
