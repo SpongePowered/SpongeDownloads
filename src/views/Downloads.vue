@@ -224,7 +224,7 @@
       updateBuildsPage(result, offset) {
           this.builds = result;
           this.offset = offset;
-          this.updateRouter();
+          this.updateRouter(this.platform.tags.minecraft.current);
           this.loading = false;
       },
       redirectToDefaultVersion() {
@@ -245,15 +245,15 @@
             return false;
           }
 
-          this.updateRouter();
+          this.updateRouter(this.platform.latestRecommended.tags.minecraft);
           return true
         }
       },
-      updateRouter() {
+      updateRouter(value) {
           this.$router.push({
             name: 'downloads',
             params: {project: this.platform.id},
-            query: {minecraft: this.platform.latestRecommended.tags.minecraft, offset: this.offset}
+            query: {minecraft: value, offset: this.offset}
           });
       },
       buildAPITagsQuery() {
@@ -270,7 +270,7 @@
 
         // force API 7, unfortunately things aren't sorted by date here and all API-8 builds are useless.
         // We may need to have a frontend map so we can support other versions with something like this...
-        if (value.current.startsWith("1.12")) {
+        if (value.current.startsWith("1.12.2")) {
           currentQuery += "api:7,"
         }
 
