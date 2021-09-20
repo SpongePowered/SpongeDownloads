@@ -14,7 +14,7 @@
             <b-button-group class="versions" :key="platform.tags.minecraft.name">
               <b-button variant="primary" class="active sponge">{{ platform.tags.minecraft.current }}</b-button>
               <b-dropdown variant="primary" right>
-                <b-dropdown-item v-for="version of platform.tags.minecraft.versions" :key="version" @click="platform.tags.minecraft.current=version; resetBuilds()">
+                <b-dropdown-item v-for="version of platform.tags.minecraft.versions" :key="version" @click="platform.tags.minecraft.current=version; changeVersion()">
                   {{ version }}
                 </b-dropdown-item>
               </b-dropdown>
@@ -30,7 +30,7 @@
       <div id="recommended-build" v-if="recommended">
         <b-container>
           <h3>Latest Recommended Build</h3>
-          <builds :platform="platform.name" :builds="recommended" primary/>
+          <builds :platform="platform.name" :builds="recommended.builds" primary/>
         </b-container>
       </div>
 
@@ -50,7 +50,7 @@
       <b-container>
         <div id="all-builds" v-if="builds">
           <h3>All builds</h3>
-          <builds :platform="platform.name" :builds="builds"/>
+          <builds :platform="platform.name" :builds="builds.builds"/>
         </div>
 
         <div id="no-builds" v-else-if="!recommended">
@@ -58,10 +58,10 @@
         </div>
 
         <div class="navigation" v-if="builds">
-          <b-button class="newer" v-if="$route.query.offset" size="sm" active-class="">
+          <b-button class="newer" v-if="offset > 0" size="sm" active-class="" @click="changePage(-10)">
             <font-awesome-icon icon="chevron-left"/> Newer
           </b-button>
-          <b-button class="older" size="sm" active-class="" v-if="builds.size > 10">
+          <b-button class="older" size="sm" active-class="" v-if="builds.size > 10 && builds.size - 10 > offset" @click="changePage(10)">
             Older <font-awesome-icon icon="chevron-right"/>
           </b-button>
           <div class="clearfix"></div>
@@ -109,7 +109,8 @@
         loadingRecommended: false,
         platform: null,
         builds: null,
-        recommended: null
+        recommended: null,
+        offset: null
       }
     },
     created() {
@@ -138,6 +139,7 @@
         this.recommended = null;
         this.loading = true;
         this.loadingRecommended = true;
+        this.offset = this.$route.query.offset || 0
 
         if (this.platform.loaded) {
           this.redirectToDefaultVersion();
@@ -171,22 +173,31 @@
           keys.forEach(element => futures.push(axios.get(`/groups/${this.platform.group}/artifacts/${this.platform.id}/versions/${element}`)));
           Promise.all(futures).then(r => {
             // My JS is terrible, but this should do...
-            let result = {};
+            let result = {
+              builds: {},
+              size: response.data.size
+            };
             r.forEach(r1 => {
               let value = {};
               value.recommended = r1.data.recommended;
               value.asset = r1.data.assets.filter(x => (x.classifier === "" || x.classifier === "universal") && x.extension === "jar")[0]
-              result[r1.data.coordinates.version] = value;
+              result.builds[r1.data.coordinates.version] = value;
             });
             completeCallback(result);
           }, failureCallback)
       },
-      resetBuilds() {
+      changeVersion() {
         this.builds = null;
         this.recommended = null;
         this.loading = true;
         this.loadingRecommended = true;
+        this.offset = 0;
         this.fetchBuilds();
+      },
+      changePage(offsetChange = 10) {
+        this.builds = null;
+        this.loading = true;
+        this.fetchBuildsPage(offsetChange, parseInt(this.offset) + parseInt(offsetChange));
       },
       fetchBuilds() {
         const errorCallback = (error) => {
@@ -201,13 +212,19 @@
           this.recommended = result;
           this.loadingRecommended = false;
       },
-      fetchBuildsPage(limit=10, offset=0) {
+      fetchBuildsPage(limit=10, offset=null) {
+        if (offset == null) {
+          offset = this.offset;
+        }
+        offset = Math.max(0, offset);
         const errorCallback = () => console.log(`Error while fetching the versions for the platform ${this.platform.id} and tags ${this.buildAPITagsQuery()}`);
         axios.get(`/groups/${this.platform.group}/artifacts/${this.platform.id}/versions?tags=${this.buildAPITagsQuery()}&offset=${offset}&limit=${limit}`)
-          .then(result => this.fetchVersions(result, this.updateBuildsPage, errorCallback), errorCallback);
+          .then(result => this.fetchVersions(result, r => this.updateBuildsPage(r, offset), errorCallback), errorCallback);
       },
-      updateBuildsPage(result) {
+      updateBuildsPage(result, offset) {
           this.builds = result;
+          this.offset = offset;
+          this.updateRouter();
           this.loading = false;
       },
       redirectToDefaultVersion() {
@@ -228,13 +245,16 @@
             return false;
           }
 
+          this.updateRouter();
+          return true
+        }
+      },
+      updateRouter() {
           this.$router.push({
             name: 'downloads',
             params: {project: this.platform.id},
-            query: this.platform.latestRecommended.tags
+            query: {minecraft: this.platform.latestRecommended.tags.minecraft, offset: this.offset}
           });
-          return true
-        }
       },
       buildAPITagsQuery() {
         let currentQuery = "";
@@ -247,6 +267,12 @@
           currentQuery += index + ":" + value.current + ",";
         }
         // }
+
+        // force API 7, unfortunately things aren't sorted by date here and all API-8 builds are useless.
+        // We may need to have a frontend map so we can support other versions with something like this...
+        if (value.current.startsWith("1.12")) {
+          currentQuery += "api:7,"
+        }
 
         return currentQuery;
       }
