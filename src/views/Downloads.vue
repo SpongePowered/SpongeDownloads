@@ -9,12 +9,12 @@
               <h1><platform-logo :platform="platform"/></h1>
             </div>
           </b-col>
-          <b-col class="download-category" v-if="platform.loaded" v-for="tag in platform.tags">
-            <h3>{{ tag.name }} version</h3>
-            <b-button-group id="versions">
-              <b-button variant="primary" class="active">{{ tag.current }}</b-button>
+          <b-col class="download-category" v-if="platform.loaded">
+            <h3>{{ platform.tags.minecraft.name }} version</h3>
+            <b-button-group class="versions" :key="platform.tags.minecraft.name">
+              <b-button variant="primary" class="active sponge">{{ platform.tags.minecraft.current }}</b-button>
               <b-dropdown variant="primary" right>
-                <b-dropdown-item v-for="version of tag.versions" :key="version">
+                <b-dropdown-item v-for="version of platform.tags.minecraft.versions" :key="version" @click="platform.tags.minecraft.current=version; resetBuilds()">
                   {{ version }}
                 </b-dropdown-item>
               </b-dropdown>
@@ -109,7 +109,7 @@
         loadingRecommended: false,
         platform: null,
         builds: null,
-        recommended: null,
+        recommended: null
       }
     },
     created() {
@@ -181,6 +181,13 @@
             completeCallback(result);
           }, failureCallback)
       },
+      resetBuilds() {
+        this.builds = null;
+        this.recommended = null;
+        this.loading = true;
+        this.loadingRecommended = true;
+        this.fetchBuilds();
+      },
       fetchBuilds() {
         const errorCallback = (error) => {
           if (error.response && error.response.status === 404) this.loadingRecommended = false;
@@ -207,12 +214,14 @@
         if (this.platform.loaded) {
           let individual = false;
 
-          for (const [index,] of Object.entries(this.platform.tags)) {
-            if (this.$route.query.hasOwnProperty(index)) {
-              this.$set(this.platform.tags[index], 'current', this.$route.query[index]);
-              individual = true;
-            }
+          //for (const [index,] of Object.entries(this.platform.tags)) {
+          let index = "minecraft";
+          // let value = this.platform.tags.minecraft;
+          if (this.$route.query.hasOwnProperty(index)) {
+            this.$set(this.platform.tags[index], 'current', this.$route.query[index]);
+            individual = true;
           }
+          //}
 
           if(individual) {
             this.fetchBuilds();
@@ -230,11 +239,14 @@
       buildAPITagsQuery() {
         let currentQuery = "";
 
-        for (const [index,value] of Object.entries(this.platform.tags)) {
-          if (value.current != null) {
-           currentQuery += index + ":" + value.current + ",";
-          }
+        // We're just doing Minecraft version for this download page, no point mixing API/Forge/MC version
+        // for (const [index,value] of Object.entries(this.platform.tags)) {
+        let index = "minecraft";
+        let value = this.platform.tags.minecraft;
+        if (value.current != null) {
+          currentQuery += index + ":" + value.current + ",";
         }
+        // }
 
         return currentQuery;
       }
@@ -256,98 +268,3 @@
   }
 </script>
 
-<style lang="scss">
-  @import "../assets/variables";
-
-  #downloads {
-    h1 {
-      text-align: center;
-    }
-
-    h3 {
-      font-size: 1.5rem;
-    }
-  }
-
-  #download-loader {
-    margin-top: 50px;
-
-    @include media-breakpoint-down(sm) {
-      text-align: center;
-    }
-  }
-
-  #builds .container {
-    padding-top: 30px;
-    padding-bottom: 10px;
-  }
-
-  .download-category {
-    margin-top: 20px;
-    text-align: center;
-
-    // TODO: Remove build types
-    ul {
-      list-style-type: none;
-      padding: 0;
-
-      line-height: 1.3;
-
-      @include montserrat;
-      font-size: 1.3rem;
-
-      .badge {
-        font-size: 70%;
-        padding-top: 0.3em;
-        padding-bottom: 0.3em;
-
-        &.active span {
-          border-bottom: 1px solid white;
-        }
-      }
-    }
-
-    .dropdown-menu {
-      margin-top: -1px;
-      min-width: 0;
-
-      .active {
-        font-weight: bold;
-      }
-    }
-  }
-
-  #versions {
-    .btn.active {
-      color: black;
-      background-color: $sponge_yellow;
-
-      &:hover {
-        background-color: tint($sponge_yellow, 50%);
-      }
-    }
-  }
-
-  #recommended-build {
-    font-size: 1.2rem;
-    background: tint($sponge_grey, 95%);
-  }
-
-  #no-builds h3 {
-    margin-bottom: 30px;
-  }
-
-  .navigation {
-    margin-bottom: 20px;
-
-    .newer {
-      float: left;
-      margin-left: 30px;
-    }
-
-    .older {
-      float: right;
-      margin-right: 10px;
-    }
-  }
-</style>

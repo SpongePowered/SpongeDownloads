@@ -1,0 +1,93 @@
+@import "variables";
+
+#downloads {
+  h1 {
+    text-align: center;
+  }
+
+  h3 {
+    font-size: 1.5rem;
+  }
+}
+
+#download-loader {
+  margin-top: 50px;
+
+  @include media-breakpoint-down(sm) {
+    text-align: center;
+  }
+}
+
+#builds .container {
+  padding-top: 30px;
+  padding-bottom: 10px;
+}
+
+.download-category {
+  margin-top: 20px;
+  text-align: center;
+
+  // TODO: Remove build types
+  ul {
+    list-style-type: none;
+    padding: 0;
+
+    line-height: 1.3;
+
+    @include montserrat;
+    font-size: 1.3rem;
+
+    .badge {
+      font-size: 70%;
+      padding-top: 0.3em;
+      padding-bottom: 0.3em;
+
+      &.active span {
+        border-bottom: 1px solid white;
+      }
+    }
+  }
+
+  .dropdown-menu {
+    margin-top: -1px;
+    min-width: 0;
+
+    .active {
+      font-weight: bold;
+    }
+  }
+}
+
+.versions {
+  > .btn.active.sponge {
+    color: black;
+    background-color: $sponge_yellow;
+
+    &:hover {
+      background-color: tint($sponge_yellow, 50%);
+    }
+  }
+}
+
+#recommended-build {
+  font-size: 1.2rem;
+  background: tint($sponge_grey, 95%);
+}
+
+#no-builds h3 {
+  margin-bottom: 30px;
+}
+
+.navigation {
+  margin-bottom: 20px;
+
+  .newer {
+    float: left;
+    margin-left: 30px;
+  }
+
+  .older {
+    float: right;
+    margin-right: 10px;
+  }
+}
