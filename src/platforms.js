@@ -46,6 +46,12 @@ const ArtifactTypes = {
   }
 };
 
+// Version to function
+const spongeQueryModifiers = {
+  // force API 7, unfortunately things aren't sorted by date here and all API-8 builds are useless.
+  "1.12.2": query => query["api"] = 7
+};
+
 export const Platforms = {
   spongevanilla: {
     group: 'org.spongepowered',
@@ -54,6 +60,7 @@ export const Platforms = {
     suffix: "Vanilla",
     description: "SpongeVanilla is the implementation of the Sponge API on top of Vanilla Minecraft.",
     recommendation: "Recommended for running plugins without Forge mods.",
+    queryModifiers: spongeQueryModifiers,
     tags: {
       api: {
         name: "api"
@@ -75,6 +82,7 @@ export const Platforms = {
     suffix: "Forge",
     description: "SpongeForge is the implementation of the Sponge API on the Minecraft Forge platform.",
     recommendation: "Recommended for running plugins together with Forge mods.",
+    queryModifiers: spongeQueryModifiers,
     tags: {
       api: {
         name: "api"

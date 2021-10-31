@@ -292,24 +292,23 @@
         }
       },
       buildAPITagsQuery() {
-        let currentQuery = "";
+        let currentQuery = {};
 
         // We're just doing Minecraft version for this download page, no point mixing API/Forge/MC version
-        // for (const [index,value] of Object.entries(this.platform.tags)) {
-        let index = "minecraft";
         let value = this.platform.tags.minecraft;
         if (value.current != null) {
-          currentQuery += index + ":" + value.current + ",";
-        }
-        // }
-
-        // force API 7, unfortunately things aren't sorted by date here and all API-8 builds are useless.
-        // We may need to have a frontend map so we can support other versions with something like this...
-        if (value.current.startsWith("1.12.2")) {
-          currentQuery += "api:7,"
+          currentQuery["minecraft"] = value.current;
         }
 
-        return currentQuery;
+        let modifier = Object.keys(this.platform.queryModifiers).find(x => value.current === x);
+        if (modifier !== undefined) {
+          this.platform.queryModifiers[modifier](currentQuery);
+        }
+
+        return this.stringifyQuery(currentQuery);
+      },
+      stringifyQuery(q) {
+        return Object.keys(q).reduce((previous, key) => `${previous},${key}:${q[key]}`, "")
       }
     },
     components: {
