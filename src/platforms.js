@@ -56,10 +56,10 @@ export const Platforms = {
     recommendation: "Recommended for running plugins without Forge mods.",
     tags: {
       api: {
-        name: "Api"
+        name: "api"
       },
       minecraft: {
-        name: "Minecraft"
+        name: "minecraft"
       },
     },
     artifactTypes: [
@@ -77,13 +77,15 @@ export const Platforms = {
     recommendation: "Recommended for running plugins together with Forge mods.",
     tags: {
       api: {
-        name: "Api"
+        name: "api"
       },
       forge: {
-        name: "Forge"
+        name: "forge",
+        display: true,
+        color: 'forge'
       },
       minecraft: {
-        name: "Minecraft"
+        name: "minecraft"
       },
     },
     artifactTypes: [

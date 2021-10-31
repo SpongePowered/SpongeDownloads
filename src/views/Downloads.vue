@@ -108,6 +108,7 @@
         loading: false,
         loadingRecommended: false,
         platform: null,
+        displayTags: null,
         builds: null,
         recommended: null,
         offset: null
@@ -135,8 +136,8 @@
       updateData() {
         // guard against multiple requests.
         if (!this.loading) {
-          console.log("updateData");
           this.platform = Platforms[this.$route.params.project];
+          this.determineDisplayTags();
 
           this.builds = null;
           this.recommended = null;
@@ -150,6 +151,11 @@
             this.fetchPlatform()
           }
         }
+      },
+      determineDisplayTags() {
+        let t = {};
+        Object.keys(this.platform.tags).filter(key => this.platform.tags[key].display).forEach(key => t[key] = this.platform.tags[key]);
+        this.displayTags = t;
       },
       fetchPlatform() {
         axios.get(`/groups/${this.platform.group}/artifacts/${this.platform.id}`).then(response => {
@@ -174,6 +180,7 @@
           // For each key, we need to make an AJAX call...
           let futures = new Array(); // AxiosPromises
           keys.forEach(element => futures.push(axios.get(`/groups/${this.platform.group}/artifacts/${this.platform.id}/versions/${element}`)));
+          const dt = this.displayTags;
           Promise.all(futures).then(r => {
             // My JS is terrible, but this should do...
             let result = {
@@ -183,7 +190,17 @@
             r.forEach(r1 => {
               let value = {};
               value.recommended = r1.data.recommended;
-              value.asset = r1.data.assets.filter(x => (x.classifier === "" || x.classifier === "universal") && x.extension === "jar")[0]
+              value.asset = r1.data.assets.filter(x => (x.classifier === "" || x.classifier === "universal") && x.extension === "jar")[0];
+              value.displayTags = {};
+              if (r1.data.tags !== undefined) {
+                for (const key of Object.keys(r1.data.tags).filter(k => dt.hasOwnProperty(k))) {
+                  value.displayTags[key] = {
+                    name: dt[key].name || key,
+                    text: r1.data.tags[key],
+                    color: dt[key].color || "success"
+                  };
+                }
+              }
               result.builds[r1.data.coordinates.version] = value;
             });
             completeCallback(result);

@@ -1,16 +1,16 @@
 export default {
   name: 'build-label',
   props: {
-    l: Object
+    tagKey: String,
+    text: String,
+    color: String
   },
   render(create) {
-    return create(this.l.link ? 'a' : 'span', {
-      class: ['badge', `badge-${this.l.color}`],
-      attrs: {
-        title: this.l.title,
-        href: this.l.link,
-        target: this.l.link && '_blank'
-      }
-    }, this.l.name)
+    const k = this.tagKey;
+    const t = k !== undefined ? `${k}: ${this.text}` : this.text;
+    const color = this.color;
+    return create('span', {
+      class: ['badge', `badge-${color}`]
+    }, t);
   }
 }
