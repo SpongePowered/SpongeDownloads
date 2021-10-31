@@ -154,7 +154,12 @@
       },
       determineDisplayTags() {
         let t = {};
-        Object.keys(this.platform.tags).filter(key => this.platform.tags[key].display).forEach(key => t[key] = this.platform.tags[key]);
+        Object.keys(this.platform.tags).filter(key => this.platform.tags[key].display).forEach(key => {
+          t[key] = this.platform.tags[key];
+          if (!t[key].hasOwnProperty("transform")) {
+            t[key].transform = e => e;
+          }
+        });
         this.displayTags = t;
       },
       fetchPlatform() {
@@ -196,7 +201,7 @@
                 for (const key of Object.keys(r1.data.tags).filter(k => dt.hasOwnProperty(k))) {
                   value.displayTags[key] = {
                     name: dt[key].name || key,
-                    text: r1.data.tags[key],
+                    text: dt[key].transform(r1.data.tags[key]),
                     color: dt[key].color || "success"
                   };
                 }

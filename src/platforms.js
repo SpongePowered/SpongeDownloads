@@ -82,7 +82,13 @@ export const Platforms = {
       forge: {
         name: "forge",
         display: true,
-        color: 'forge'
+        color: 'forge',
+        transform: function(value) {
+          if (value === "2838") {
+            return "Works with 2855";
+          }
+          return value;
+        }
       },
       minecraft: {
         name: "minecraft"
