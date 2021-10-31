@@ -100,7 +100,7 @@
   }
 
   .build-labels {
-    * {;
+    * {
       vertical-align: middle;
 
       // Keep some space between multiple build labels

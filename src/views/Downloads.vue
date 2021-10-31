@@ -133,19 +133,23 @@
         return (process.env.BASE_URL || '/') + url;
       },
       updateData() {
-        this.platform = Platforms[this.$route.params.project];
+        // guard against multiple requests.
+        if (!this.loading) {
+          console.log("updateData");
+          this.platform = Platforms[this.$route.params.project];
 
-        this.builds = null;
-        this.recommended = null;
-        this.loading = true;
-        this.loadingRecommended = true;
-        this.offset = this.$route.query.offset || 0
+          this.builds = null;
+          this.recommended = null;
+          this.loading = true;
+          this.loadingRecommended = true;
+          this.offset = this.$route.query.offset || 0
 
-        if (this.platform.loaded) {
-          this.redirectToDefaultVersion();
-          this.fetchBuilds()
-        } else {
-          this.fetchPlatform()
+          if (this.platform.loaded) {
+            this.redirectToDefaultVersion();
+            this.fetchBuilds()
+          } else {
+            this.fetchPlatform()
+          }
         }
       },
       fetchPlatform() {
