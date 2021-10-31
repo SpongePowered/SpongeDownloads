@@ -146,7 +146,6 @@
 
           if (this.platform.loaded) {
             this.redirectToDefaultVersion();
-            this.fetchBuilds()
           } else {
             this.fetchPlatform()
           }
@@ -226,10 +225,10 @@
           .then(result => this.fetchVersions(result, r => this.updateBuildsPage(r, offset), errorCallback), errorCallback);
       },
       updateBuildsPage(result, offset) {
-          this.builds = result;
-          this.offset = offset;
-          this.updateRouter(this.platform.tags.minecraft.current);
-          this.loading = false;
+        this.builds = result;
+        this.offset = offset;
+        this.updateRouter(this.platform.tags.minecraft.current);
+        this.loading = false;
       },
       redirectToDefaultVersion() {
         if (this.platform.loaded) {
@@ -241,24 +240,34 @@
           if (this.$route.query.hasOwnProperty(index)) {
             this.$set(this.platform.tags[index], 'current', this.$route.query[index]);
             individual = true;
+          } else {
+            this.$set(this.platform.tags[index], 'current', this.platform.latestRecommended.tags.minecraft);
+            this.updateRouter(this.platform.latestRecommended.tags.minecraft);
           }
           //}
 
-          if(individual) {
-            this.fetchBuilds();
-            return false;
-          }
-
-          this.updateRouter(this.platform.latestRecommended.tags.minecraft);
-          return true
+          this.fetchBuilds();
+          return individual;
         }
       },
       updateRouter(value) {
+        // don't push when we don't need to
+        // The second parameter is written as such as the pushed parameter might be a number or a string...
+        // 
+        // We can't use || as a null coalesing operator because 0 means something
+        // We can't use ?? as a null coalesing operator because it fails to compile (both node 14 and 16, which should support it...)
+        let offsetParam = this.$route.query["offset"];
+        if (offsetParam === undefined || offsetParam === null) {
+          offsetParam = ""
+        }
+        let hasChanged = this.$route.query["minecraft"] !== value || offsetParam.toString() !== this.offset.toString() || this.$route.params["project"] !== this.platform.id;
+        if (hasChanged) {
           this.$router.push({
             name: 'downloads',
             params: {project: this.platform.id},
             query: {minecraft: value, offset: this.offset}
           });
+        }
       },
       buildAPITagsQuery() {
         let currentQuery = "";
