@@ -230,7 +230,7 @@
             r.forEach(r1 => {
               let value = {};
               value.recommended = r1.data.recommended;
-              value.assets = generateAssetsBlock(r1.data.tags, r1.data.assets) // r1.data.assets.filter(x => (x.classifier === "" || x.classifier === "universal") && x.extension === "jar")[0];
+              value.assets = generateAssetsBlock(r1.data.tags, r1.data.assets);
               value.displayTags = {};
               if (r1.data.tags !== undefined) {
                 for (const key of Object.keys(r1.data.tags).filter(k => dt.hasOwnProperty(k))) {

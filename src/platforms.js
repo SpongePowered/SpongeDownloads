@@ -15,7 +15,7 @@ export const Labels = {
 
 const ArtifactTypes = {
   Main: {
-    name: "Main",
+    name: "Download",
     legacyClassifier: '',
     classifier: 'universal',
     icon: faDownload,
