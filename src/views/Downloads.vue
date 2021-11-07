@@ -14,7 +14,7 @@
             <b-button-group class="versions" :key="platform.tags.minecraft.name">
               <b-button variant="primary" class="active sponge">{{ platform.tags.minecraft.current }}</b-button>
               <b-dropdown variant="primary" right>
-                <b-dropdown-item v-for="version of platform.tags.minecraft.versions" :key="version" @click="platform.tags.minecraft.current=version; changeVersion()">
+                <b-dropdown-item v-for="version of versions" :key="version" @click="platform.tags.minecraft.current=version; changeVersion()">
                   {{ version }}
                 </b-dropdown-item>
               </b-dropdown>
@@ -111,7 +111,8 @@
         displayTags: null,
         builds: null,
         recommended: null,
-        offset: null
+        offset: null,
+        displayPreRelease: false
       }
     },
     created() {
@@ -127,6 +128,12 @@
     computed: {
       sponsor() {
         return Sponsors[Math.floor(Math.random() * Sponsors.length)];
+      },
+      versions() {
+        if (this.displayPreRelease) {
+          return this.platform.tags.minecraft.versions;
+        }
+        return this.platform.tags.minecraft.versions.filter(x => !x.includes("-"));
       }
     },
     methods: {
