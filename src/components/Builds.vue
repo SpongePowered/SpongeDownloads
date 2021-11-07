@@ -12,11 +12,12 @@
 
       <div class="artifacts">
       <!-- artifacts -->
-        <b-button :key=""
-               :variant="'primary'" :size="btnSize"
-               :href="build.asset.downloadUrl" title="Download">
-          <!--<font-awesome-icon :icon="artifact.type.icon"/>-->
-          <span>Download</span></b-button>
+      <b-button v-for="artifact in build.assets" :key="artifact.type.legacyClassifier"
+               :variant="artifact.type.primary ? 'primary' : ''" :size="btnSize"
+               :href="artifact.asset.downloadUrl" :title="artifact.type.title">
+
+          <font-awesome-icon :icon="artifact.type.icon"/>
+          <span> {{ artifact.primary ? 'Download' : artifact.type.name }}</span></b-button>
       </div>
       <!-- artifacts -->
 

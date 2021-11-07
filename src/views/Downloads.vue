@@ -92,11 +92,11 @@
 
   import axios from 'axios';
 
-  import {Platforms, Labels} from '../platforms'
-  import Builds from '../components/Builds.vue'
-  import PlatformLogo from '../components/PlatformLogo.vue'
+  import {Platforms, Labels} from '../platforms';
+  import Builds from '../components/Builds.vue';
+  import PlatformLogo from '../components/PlatformLogo.vue';
 
-  import Sponsors from '../../sponsors.json'
+  import Sponsors from '../../sponsors.json';
 
   fontawesomeLibrary.add(faChevronLeft, faChevronRight);
 
@@ -186,6 +186,34 @@
           let futures = new Array(); // AxiosPromises
           keys.forEach(element => futures.push(axios.get(`/groups/${this.platform.group}/artifacts/${this.platform.id}/versions/${element}`)));
           const dt = this.displayTags;
+          const platform = this.platform;
+
+          const generateAssetsBlock = (tags, assets) => {
+            let classifier;
+            if ((platform.checkIsLegacy || (t => false))(tags)) {
+              classifier = "legacyClassifier";
+            } else {
+              classifier = "classifier";
+            }
+
+            let toReturn = [];
+            for (const asset of assets.filter(x => x.extension === "jar")) {
+              const a = platform.artifactTypes.find(x => x[classifier] === asset.classifier);
+              if (a !== undefined) {
+                const res = { 
+                  type: a,
+                  asset: asset
+                };
+                if (a.primary) {
+                  toReturn.unshift(res);
+                } else {
+                  toReturn.push(res);
+                }
+              }
+            }
+            return toReturn;
+          }
+
           Promise.all(futures).then(r => {
             // My JS is terrible, but this should do...
             let result = {
@@ -195,7 +223,7 @@
             r.forEach(r1 => {
               let value = {};
               value.recommended = r1.data.recommended;
-              value.asset = r1.data.assets.filter(x => (x.classifier === "" || x.classifier === "universal") && x.extension === "jar")[0];
+              value.assets = generateAssetsBlock(r1.data.tags, r1.data.assets) // r1.data.assets.filter(x => (x.classifier === "" || x.classifier === "universal") && x.extension === "jar")[0];
               value.displayTags = {};
               if (r1.data.tags !== undefined) {
                 for (const key of Object.keys(r1.data.tags).filter(k => dt.hasOwnProperty(k))) {
@@ -256,9 +284,7 @@
         if (this.platform.loaded) {
           let individual = false;
 
-          //for (const [index,] of Object.entries(this.platform.tags)) {
           let index = "minecraft";
-          // let value = this.platform.tags.minecraft;
           if (this.$route.query.hasOwnProperty(index)) {
             this.$set(this.platform.tags[index], 'current', this.$route.query[index]);
             individual = true;
@@ -266,7 +292,6 @@
             this.$set(this.platform.tags[index], 'current', this.platform.latestRecommended.tags.minecraft);
             this.updateRouter(this.platform.latestRecommended.tags.minecraft);
           }
-          //}
 
           this.fetchBuilds();
           return individual;

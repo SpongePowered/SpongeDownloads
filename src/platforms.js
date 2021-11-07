@@ -16,31 +16,37 @@ export const Labels = {
 const ArtifactTypes = {
   Main: {
     name: "Main",
-    classifier: '',
+    legacyClassifier: '',
+    classifier: 'universal',
     icon: faDownload,
-    title: "Download"
+    title: "Download",
+    primary: true
   },
   Sources: {
     name: "Sources",
-    classifier: 'sources',
+    legacyClassifier: 'sources',
+    classifier: 'sources-dev',
     icon: faCode,
     title: "Download the source code"
   },
   Javadocs: {
     name: "Javadocs",
-    classifier: 'javadoc',
+    legacyClassifier: 'javadoc',
+    classifier: '',
     icon: faGraduationCap,
     title: "Download the Java API documentation"
   },
   Shaded: {
     name: "Shaded",
-    classifier: 'shaded',
+    legacyClassifier: 'shaded',
+    classifier: null,
     icon: faArchive,
     title: "Download a package with all dependencies"
   },
   DevShaded: {
     name: "Dev",
-    classifier: 'dev-shaded',
+    legacyClassifier: 'dev-shaded',
+    classifier: null,
     icon: faWrench,
     title: "Download an un-obfuscated build with all dependencies for testing in a development environment"
   }
@@ -51,6 +57,18 @@ const spongeQueryModifiers = {
   // force API 7, unfortunately things aren't sorted by date here and all API-8 builds are useless.
   "1.12.2": query => query["api"] = 7
 };
+
+const legacyMcVersions = [
+  "1.8.",
+  "1.9.",
+  "1.10.",
+  "1.11.",
+  "1.12."
+]
+
+const mcIsLegacyCheck = tags => {
+  return (tags.hasOwnProperty("minecraft") && legacyMcVersions.findIndex(x => tags["minecraft"].startsWith(x)) !== -1)
+}
 
 export const Platforms = {
   spongevanilla: {
@@ -73,7 +91,8 @@ export const Platforms = {
       ArtifactTypes.Main,
       ArtifactTypes.Sources,
       ArtifactTypes.DevShaded
-    ]
+    ],
+    checkIsLegacy: mcIsLegacyCheck
   },
   spongeforge: {
     group: 'org.spongepowered',
@@ -106,6 +125,7 @@ export const Platforms = {
       ArtifactTypes.Main,
       ArtifactTypes.Sources,
       ArtifactTypes.DevShaded
-    ]
-  },
+    ],
+    checkIsLegacy: mcIsLegacyCheck
+  }
 };
