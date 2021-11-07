@@ -230,6 +230,7 @@
             r.forEach(r1 => {
               let value = {};
               value.recommended = r1.data.recommended;
+              value.experimental = (platform.checkExperimental || (t => false))(r1.data.coordinates.version || "unknown")
               value.assets = generateAssetsBlock(r1.data.tags, r1.data.assets);
               value.displayTags = {};
               if (r1.data.tags !== undefined) {

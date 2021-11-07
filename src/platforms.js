@@ -6,6 +6,11 @@ export const Labels = {
     color: 'success',
     title: "Recommended build"
   },
+  experimental: {
+    name: "Experimental",
+    color: 'warning',
+    title: "Experimental"
+  },
   latest: {
     name: "Latest",
     color: 'success',
@@ -70,6 +75,10 @@ const mcIsLegacyCheck = tags => {
   return (tags.hasOwnProperty("minecraft") && legacyMcVersions.findIndex(x => tags["minecraft"].startsWith(x)) !== -1)
 }
 
+const markExperimental = version => {
+  return version.toLowerCase().includes("0.0-rc");
+}
+
 export const Platforms = {
   spongevanilla: {
     group: 'org.spongepowered',
@@ -92,7 +101,8 @@ export const Platforms = {
       ArtifactTypes.Sources,
       ArtifactTypes.DevShaded
     ],
-    checkIsLegacy: mcIsLegacyCheck
+    checkIsLegacy: mcIsLegacyCheck,
+    checkExperimental: markExperimental
   },
   spongeforge: {
     group: 'org.spongepowered',
@@ -126,6 +136,7 @@ export const Platforms = {
       ArtifactTypes.Sources,
       ArtifactTypes.DevShaded
     ],
-    checkIsLegacy: mcIsLegacyCheck
+    checkIsLegacy: mcIsLegacyCheck,
+    checkExperimental: markExperimental
   }
 };

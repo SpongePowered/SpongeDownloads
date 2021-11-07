@@ -6,6 +6,7 @@
       <h4>{{ key }}
         <span class="build-labels">
           <build-label v-if="build.recommended" :color="recommendedLabel.color" :text="recommendedLabel.name"/>
+          <build-label v-if="build.experimental" :color="experimentalLabel.color" :text="experimentalLabel.name"/>
           <build-label v-for="(value, name) in build.displayTags" :tagKey="value.name" :text="value.text" :color="value.color"/>
         </span>
       </h4>
@@ -56,6 +57,9 @@
       },
       recommendedLabel() {
         return Labels.recommended;
+      },
+      experimentalLabel() {
+        return Labels.experimental;
       }
     },
     components: {
