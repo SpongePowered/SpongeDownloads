@@ -22,6 +22,11 @@
       </div>
       <!-- artifacts -->
 
+      <!-- changelong -->
+      <div class="changelog" v-if="!primary">
+        <commits :project="platform" :l="build.commits" />
+      </div>
+
       <div class="clearfix"></div>
     </li>
   </ol>

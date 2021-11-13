@@ -1,27 +1,37 @@
 <template>
-  <ol class="commits">
-    <li class="commit" v-for="commit in commits" :key="commit.id">
-      <a :href="'https://github.com/SpongePowered/' + project + '/commit/' + commit.id" target="_blank">{{ commit.title }}</a>
-      <ellipsis-button v-if="commit.description || commit.submodules" v-b-toggle="`${commit.id}-collapse`"/>
-      <div>{{ commit.author }} - <small><relative-time :t="commit.date"/></small></div>
-      <b-collapse :id="`${commit.id}-collapse`" v-if="commit.description || commit.submodules">
-        <pre class="commit-message" v-if="commit.description">{{ commit.description }}</pre>
-        <div class="commit-submodules" v-if="commit.submodules">
-          <div v-for="(subcommits, submodule) in commit.submodules" :key="submodule">
-            <!-- TODO: Submodule commits should be NEVER null -->
-            <template v-if="subcommits">
-              <h5>{{ submodule }}</h5>
-              <commits :project="submodule" :l="subcommits"></commits>
-            </template>
+  <div>
+    <div class="commit-processing" v-if="l.processing">
+      <em>Commit information may be incomplete - it is still being processed.</em>
+    </div>
+    <ol class="commits" v-if="containsCommits">
+      <li class="commit" v-for="commit in commits" :key="commit.sha">
+        <a :href="commit.link + '/commit/' + commit.sha" target="_blank">{{ commit.message }}</a>
+        <ellipsis-button v-if="commit.body || commit.submodules" v-b-toggle="`${commit.sha}-collapse`"/>
+        <div>{{ commit.author.name }} - <small><relative-time :t="commit.commitDate"/></small></div>
+        <b-collapse :id="`${commit.sha}-collapse`" v-if="commit.body || commit.submodules">
+          <pre class="commit-message" v-if="commit.body">{{ commit.body }}</pre>
+          <!-- TODO: Subcommits
+          <div class="commit-submodules" v-if="commit.submodules">
+            <div v-for="(subcommits, submodule) in commit.submodules" :key="submodule">
+              <! TODO: Submodule commits should be NEVER null >
+              <template v-if="subcommits">
+                <h5>{{ submodule }}</h5>
+                <commits :project="submodule" :l="subcommits"></commits>
+              </template>
+            </div>
           </div>
-        </div>
-      </b-collapse>
-    </li>
+          -->
+        </b-collapse>
+      </li>
 
-    <li v-if="count < l.length" class="more-commits">
-      <a tabindex="0" v-on:click="count *= 2">Show {{ l.length - count }} older commits.</a>
-    </li>
-  </ol>
+      <li v-if="count < l.length" class="more-commits">
+        <a tabindex="0" v-on:click="count *= 2">Show {{ l.length - count }} older commits.</a>
+      </li>
+    </ol>
+    <div class="changelog-comment" v-else>
+      <span>No commit information is available.</span>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -39,11 +49,14 @@
       }
     },
     computed: {
+      containsCommits() {
+        return this.l.commits.length > 0;
+      },
       commits() {
         if (this.count >= this.l.length) {
-          return this.l
+          return this.l.commits;
         } else {
-          return this.l.slice(0, this.count)
+          return this.l.commits.slice(0, this.count)
         }
       }
     },

@@ -194,6 +194,21 @@
           keys.forEach(element => futures.push(axios.get(`/groups/${this.platform.group}/artifacts/${this.platform.id}/versions/${element}`)));
           const dt = this.displayTags;
           const platform = this.platform;
+          const processCommits = (commits) => {
+            if (commits === undefined) {
+              return [];
+            }
+            return commits.map(commit => {
+              let returnedObject = Object.assign({}, commit);
+              const headline = returnedObject.message.trim();
+              const body = returnedObject.body.trim();
+              if (body === headline) {
+                delete returnedObject.body; // we don't need to duplicate this.
+              } else if (body.startsWith(headline)) {
+                returnedObject.body = body.substring(headline.length).trim(); // we don't want to duplicate the message
+              }
+            });
+          };
 
           const generateAssetsBlock = (tags, assets) => {
             let classifier;
@@ -240,6 +255,17 @@
                     text: dt[key].transform(r1.data.tags[key]),
                     color: dt[key].color || "success"
                   };
+                }
+              }
+              if (r1.data.commit) {
+                value.commits = {
+                  processing: r1.data.commit.processing,
+                  commits: processCommits(r1.data.commit.commits)
+                }
+              } else {
+                value.commits = {
+                  processing: true,
+                  commits: []
                 }
               }
               result.builds[r1.data.coordinates.version] = value;
