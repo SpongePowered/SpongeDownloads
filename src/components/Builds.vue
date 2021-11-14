@@ -7,7 +7,7 @@
         <span class="build-labels">
           <build-label v-if="build.recommended" :color="recommendedLabel.color" :text="recommendedLabel.name"/>
           <build-label v-if="build.experimental" :color="experimentalLabel.color" :text="experimentalLabel.name"/>
-          <build-label v-for="(value, name) in build.displayTags" :tagKey="value.name" :text="value.text" :color="value.color"/>
+          <build-label v-for="(value, name) in build.displayTags" :tagKey="value.name" :key="value.name" :text="value.text" :color="value.color"/>
         </span>
       </h4>
 
@@ -37,7 +37,8 @@
   import {faDownload} from '@fortawesome/free-solid-svg-icons'
   import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
 
-  import RelativeTime from './relative-time'
+  // Currently unused here
+  // import RelativeTime from './relative-time'
   import BuildLabel from './build-label'
   import Commits from './Commits.vue'
   import {Labels} from "../platforms";
@@ -68,7 +69,7 @@
     components: {
       'b-button': BButton,
       FontAwesomeIcon,
-      RelativeTime,
+      // RelativeTime,
       BuildLabel,
       Commits,
     }

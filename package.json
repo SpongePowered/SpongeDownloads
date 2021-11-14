@@ -1,14 +1,10 @@
 {
-  "private": true,
   "name": "SpongeDownloads",
-  "license": "MIT",
-  "homepage": "https://github.com/SpongePowered/SpongeDownloads#readme",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/SpongePowered/SpongeDownloads.git"
-  },
-  "bugs": {
-    "url": "https://github.com/SpongePowered/SpongeDownloads/issues"
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.0",
@@ -18,22 +14,29 @@
     "bootstrap-icons": "^1.7.0",
     "bootstrap-vue": "^2.1.0",
     "bootswatch": "^4.0.0",
-    "core-js": "^2.5.4",
+    "core-js": "^3.6.5",
     "intl-relativeformat": "^2.1.0",
     "vue": "^2.6.14",
     "vue-router": "^3.0.1"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "^3.0.0-beta.15",
-    "@vue/cli-plugin-eslint": "^3.0.0-beta.15",
-    "@vue/cli-service": "^3.0.0-beta.15",
+    "@vue/cli-plugin-babel": "~4.5.15",
+    "@vue/cli-plugin-eslint": "~4.5.15",
+    "@vue/cli-service": "~4.5.15",
+    "babel-eslint": "^10.1.0",
+    "eslint": "^6.7.2",
+    "eslint-plugin-vue": "^6.2.2",
     "sass": "^1.43.4",
     "sass-loader": "^10.2.0",
     "vue-template-compiler": "^2.5.13"
   },
-  "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+  "bugs": {
+    "url": "https://github.com/SpongePowered/SpongeDownloads/issues"
+  },
+  "homepage": "https://github.com/SpongePowered/SpongeDownloads#readme",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SpongePowered/SpongeDownloads.git"
   }
 }

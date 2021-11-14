@@ -85,10 +85,10 @@
   import {faChevronLeft, faChevronRight} from '@fortawesome/free-solid-svg-icons'
   import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
 
-  import 'core-js/fn/set';
-  import 'core-js/fn/array/from';
-  import 'core-js/fn/array/find';
-  import 'core-js/fn/array/includes';
+  import 'core-js/features/set';
+  import 'core-js/features/array/from';
+  import 'core-js/features/array/find';
+  import 'core-js/features/array/includes';
 
   import axios from 'axios';
 
