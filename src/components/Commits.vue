@@ -12,7 +12,7 @@
 <!--      <i class="pad-icon bi bi-info-circle"></i>Commit information may be incomplete - it is still being processed. -->
     <ol class="commits" v-if="containsCommits">
       <li class="commit" v-for="commit in commits" :key="commit.commit.sha">
-        <a :href="commit.commit.link + '/commit/' + commit.commit.sha" target="_blank">{{ commit.commit.message }}</a>
+        <a :href="commit.commit.link" target="_blank">{{ commit.commit.message }}</a>
         <ellipsis-button v-if="commit.commit.body || commit.submodules" v-b-toggle="`${commit.commit.sha}-collapse`"/>
         <div>{{ commit.commit.author.name }} - <small><relative-time :t="commit.commit.commitDate"/></small></div>
         <b-collapse :id="`${commit.commit.sha}-collapse`" v-if="commit.commit.body || commit.submodules">
