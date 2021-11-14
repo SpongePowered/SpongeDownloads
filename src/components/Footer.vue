@@ -1,7 +1,7 @@
 <template>
   <footer>
     <b-container>
-      <p>Copyright &copy; SpongePowered 2014-2018</p>
+      <p>Copyright &copy; SpongePowered 2014-2021</p>
       <p id="fastly">Accelerated by<br>
         <a href="https://www.fastly.com">
           <img src="https://www.spongepowered.org/assets/img/fastly.png" alt="Fastly" height="45" width="100">

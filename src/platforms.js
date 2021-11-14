@@ -60,6 +60,8 @@ const ArtifactTypes = {
 // Version to function
 const spongeQueryModifiers = {
   // force API 7, unfortunately things aren't sorted by date here and all API-8 builds are useless.
+  "1.12": query => query["api"] = 7,
+  "1.12.1": query => query["api"] = 7,
   "1.12.2": query => query["api"] = 7
 };
 
@@ -72,7 +74,7 @@ const legacyMcVersions = [
 ]
 
 const mcIsLegacyCheck = tags => {
-  return (tags.hasOwnProperty("minecraft") && legacyMcVersions.findIndex(x => tags["minecraft"].startsWith(x)) !== -1)
+  return ("minecraft" in tags && legacyMcVersions.findIndex(x => tags["minecraft"].startsWith(x)) !== -1)
 }
 
 const markExperimental = version => {
