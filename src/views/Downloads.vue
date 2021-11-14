@@ -26,7 +26,18 @@
       </b-container>
     </header>
 
-    <section id="builds" v-if="builds">
+    <section id="builds" v-if="errored">
+      <b-container>
+        <div class="alert alert-danger">
+          <h3>Oh no! An error occurred while loading this page!</h3>
+          <p>We're sorry, but we seem to be having trouble getting the requested download links for you. Please try again in a few minutes, <a @click="updateData()" class="link">which you can do by clicking here.</a></p>
+          <p>If this error persists, please let us know <a href="https://discord.gg/sponge">in our Discord channels</a> so that we can investigate further.</p>
+          <hr>
+          <p><small><em>Reported error: {{ errorMessage }}</em></small></p>
+        </div>
+      </b-container>
+    </section>
+    <section id="builds" v-else-if="builds">
       <div id="recommended-build" v-if="recommended">
         <b-container>
           <h3>Latest Recommended Build</h3>
@@ -103,8 +114,10 @@
   export default {
     name: 'downloads',
     data() {
+
       // Required to initialize properties properly
       return {
+        cancelSource: axios.CancelToken.source(),
         loading: false,
         loadingRecommended: false,
         platform: null,
@@ -112,7 +125,8 @@
         builds: null,
         recommended: null,
         offset: null,
-        displayPreRelease: false
+        displayPreRelease: false,
+        errorMessage: null
       }
     },
     created() {
@@ -134,6 +148,9 @@
           return this.platform.tags.minecraft.versions;
         }
         return this.platform.tags.minecraft.versions.filter(x => !x.includes("-"));
+      },
+      errored() {
+        return this.errorMessage !== null;
       }
     },
     methods: {
@@ -143,6 +160,7 @@
       updateData() {
         // guard against multiple requests.
         if (!this.loading) {
+          this.errorMessage = null;
           this.platform = Platforms[this.$route.params.project];
           this.determineDisplayTags();
 
@@ -170,10 +188,17 @@
         this.displayTags = t;
       },
       fetchPlatform() {
-        axios.get(`/groups/${this.platform.group}/artifacts/${this.platform.id}`).then(response => {
+        if (this.errored) {
+          return;
+        }
+        axios.get(`/groups/${this.platform.group}/artifacts/${this.platform.id}`, {
+          cancelToken: this.cancelSource.token
+        }).then(response => {
           const tags = response.data.tags || [];
 
-          axios.get(`/groups/${this.platform.group}/artifacts/${this.platform.id}/latest?recommended=true`).then(response => {
+          axios.get(`/groups/${this.platform.group}/artifacts/${this.platform.id}/latest?recommended=true`, {
+            cancelToken: this.cancelSource.token
+          }).then(response => {
             const recommended = response.data;
 
             for (const [index, tag] of Object.entries(this.platform.tags)) {
@@ -184,14 +209,31 @@
             this.$set(this.platform, 'loaded', true);
 
             this.redirectToDefaultVersion()
-          }, () => console.log(`Error while fetching the latest recommended version for the platform ${this.platform.id}`))
-        }, () => console.log(`Error while fetching the platform ${this.platform.id}`))
+          }, () => this.teeError(`Error while fetching the latest recommended version for the platform ${this.platform.id}`))
+        }, () => this.teeError(`Error while fetching the platform ${this.platform.id}`))
+      },
+      teeError(error) {
+        console.error(error);
+        if (this.errorMessage === null) {
+          this.errorMessage = error;
+          this.cancelSource.cancel("Cancelling requests due to an error");
+          this.cancelSource = axios.CancelToken.source();
+          this.loading = false;
+          this.loadingRecommended = false;
+        }
       },
       fetchVersions(response, completeCallback, failureCallback) {
+          if (this.errored) {
+            return;
+          }
           const keys = Object.keys(response.data.artifacts);
           // For each key, we need to make an AJAX call...
           let futures = new Array(); // AxiosPromises
-          keys.forEach(element => futures.push(axios.get(`/groups/${this.platform.group}/artifacts/${this.platform.id}/versions/${element}`)));
+          keys.forEach(element => 
+            futures.push(axios.get(`/groups/${this.platform.group}/artifacts/${this.platform.id}/versions/${element}`, {
+              cancelToken: this.cancelSource.token
+            })));
+
           const dt = this.displayTags;
           const platform = this.platform;
           const processCommits = (commits) => {
@@ -293,10 +335,11 @@
       fetchBuilds() {
         const errorCallback = (error) => {
           if (error.response && error.response.status === 404) this.loadingRecommended = false;
-          else console.log(`Error while fetching the latest recommended version for the platform ${this.platform.id} and tags ${this.buildAPITagsQuery()}`)
+          else this.teeError(`Error while fetching the latest recommended version for the platform ${this.platform.id} and tags ${this.buildAPITagsQuery()}`)
         };
-        axios.get(`/groups/${this.platform.group}/artifacts/${this.platform.id}/versions?recommended=true&limit=1&tags=${this.buildAPITagsQuery()}`)
-          .then(result => this.fetchVersions(result, this.updateBuilds, errorCallback), errorCallback);
+        axios.get(`/groups/${this.platform.group}/artifacts/${this.platform.id}/versions?recommended=true&limit=1&tags=${this.buildAPITagsQuery()}`, {
+          cancelToken: this.cancelSource.token
+        }).then(result => this.fetchVersions(result, this.updateBuilds, errorCallback), errorCallback);
         this.fetchBuildsPage();
       },
       updateBuilds(result) {
@@ -308,9 +351,11 @@
           offset = this.offset;
         }
         offset = Math.max(0, offset);
-        const errorCallback = () => console.log(`Error while fetching the versions for the platform ${this.platform.id} and tags ${this.buildAPITagsQuery()}`);
-        axios.get(`/groups/${this.platform.group}/artifacts/${this.platform.id}/versions?tags=${this.buildAPITagsQuery()}&offset=${offset}&limit=${limit}`)
-          .then(result => this.fetchVersions(result, r => this.updateBuildsPage(r, offset), errorCallback), errorCallback);
+        const errorCallback = () => this.teeError(`Error while fetching the versions for the platform ${this.platform.id} and tags ${this.buildAPITagsQuery()}`);
+        axios.get(`/groups/${this.platform.group}/artifacts/${this.platform.id}/versions?tags=${this.buildAPITagsQuery()}&offset=${offset}&limit=${limit}`, {
+          cancelToken: this.cancelSource.token
+        })
+        .then(result => this.fetchVersions(result, r => this.updateBuildsPage(r, offset), errorCallback), errorCallback);
       },
       updateBuildsPage(result, offset) {
         this.builds = result;
