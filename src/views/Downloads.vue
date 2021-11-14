@@ -9,7 +9,7 @@
               <h1><platform-logo :platform="platform"/></h1>
             </div>
           </b-col>
-          <b-col class="download-category" v-if="platform.loaded">
+          <b-col class="download-category" v-if="platform.loaded && !errored">
             <h3>{{ platform.tags.minecraft.name }} version</h3>
             <b-button-group class="versions" :key="platform.tags.minecraft.name">
               <b-button variant="primary" class="active sponge">{{ platform.tags.minecraft.current }}</b-button>
@@ -320,6 +320,7 @@
           }, failureCallback)
       },
       changeVersion() {
+        this.errorMessage = null;
         this.builds = null;
         this.recommended = null;
         this.loading = true;
