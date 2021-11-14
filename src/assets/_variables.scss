@@ -36,6 +36,8 @@ $theme-colors: ("forge": $spongeforge_color);
 @import "~bootstrap/scss/variables";
 @import "~bootstrap/scss/mixins";
 
+$commit-processing-color: $danger;
+
 // Mixins
 @mixin montserrat {
   font-family: Montserrat, $font-family-base;

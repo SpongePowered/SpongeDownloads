@@ -1,15 +1,22 @@
 <template>
-  <div>
-    <div class="commit-processing" v-if="l.processing">
-      <em>Commit information may be incomplete - it is still being processed.</em>
-    </div>
+  <div class="changelog" :class="{ 'commit-processing': processing }">
+    <div class="processing" v-if="processing">
+      <i class="bi bi-exclamation-triangle-fill"></i>
+      <span v-if="containsCommits">
+        We're still generating the changelog for this build, the following may be incomplete.
+      </span>
+      <span v-else>
+        We're still generating the changelog for this build.
+      </span>
+    </div> 
+<!--      <i class="pad-icon bi bi-info-circle"></i>Commit information may be incomplete - it is still being processed. -->
     <ol class="commits" v-if="containsCommits">
-      <li class="commit" v-for="commit in commits" :key="commit.sha">
-        <a :href="commit.link + '/commit/' + commit.sha" target="_blank">{{ commit.message }}</a>
-        <ellipsis-button v-if="commit.body || commit.submodules" v-b-toggle="`${commit.sha}-collapse`"/>
-        <div>{{ commit.author.name }} - <small><relative-time :t="commit.commitDate"/></small></div>
-        <b-collapse :id="`${commit.sha}-collapse`" v-if="commit.body || commit.submodules">
-          <pre class="commit-message" v-if="commit.body">{{ commit.body }}</pre>
+      <li class="commit" v-for="commit in commits" :key="commit.commit.sha">
+        <a :href="commit.commit.link + '/commit/' + commit.commit.sha" target="_blank">{{ commit.commit.message }}</a>
+        <ellipsis-button v-if="commit.commit.body || commit.submodules" v-b-toggle="`${commit.commit.sha}-collapse`"/>
+        <div>{{ commit.commit.author.name }} - <small><relative-time :t="commit.commit.commitDate"/></small></div>
+        <b-collapse :id="`${commit.commit.sha}-collapse`" v-if="commit.commit.body || commit.submodules">
+          <pre class="commit-message" v-if="commit.commit.body">{{ commit.commit.body }}</pre>
           <!-- TODO: Subcommits
           <div class="commit-submodules" v-if="commit.submodules">
             <div v-for="(subcommits, submodule) in commit.submodules" :key="submodule">
@@ -25,11 +32,11 @@
       </li>
 
       <li v-if="count < l.length" class="more-commits">
-        <a tabindex="0" v-on:click="count *= 2">Show {{ l.length - count }} older commits.</a>
+        <a tabindex="0" v-on:click="count *= 2">Show {{ l.commits.length - count }} older commits.</a>
       </li>
-    </ol>
-    <div class="changelog-comment" v-else>
-      <span>No commit information is available.</span>
+    </ol> 
+    <div class="changelog-comment" v-else-if="!processing">
+      <span>No changelog is available for this build.</span>
     </div>
   </div>
 </template>
@@ -49,6 +56,9 @@
       }
     },
     computed: {
+      processing() {
+        return this.l.processing;
+      },
       containsCommits() {
         return this.l.commits.length > 0;
       },
@@ -108,5 +118,22 @@
 
   .more-commits {
     cursor: pointer;
+  }
+
+  .pad-icon {
+    margin-right: 5px;
+  }
+
+  .commit-processing {
+    border-left: solid 3px $commit-processing-color;
+  }
+
+  .processing {
+    color: $secondary; 
+
+    > i.bi {
+      color: $commit-processing-color;
+      margin-right: 5px;
+    }
   }
 </style>

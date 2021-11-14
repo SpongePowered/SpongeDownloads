@@ -199,13 +199,17 @@
               return [];
             }
             return commits.map(commit => {
-              let returnedObject = Object.assign({}, commit);
-              const headline = returnedObject.message.trim();
-              const body = returnedObject.body.trim();
+              let commitObject = Object.assign({}, commit.commit);
+              const headline = commitObject.message.trim();
+              const body = commitObject.body.trim();
               if (body === headline) {
-                delete returnedObject.body; // we don't need to duplicate this.
+                delete commitObject.body; // we don't need to duplicate this.
               } else if (body.startsWith(headline)) {
-                returnedObject.body = body.substring(headline.length).trim(); // we don't want to duplicate the message
+                commitObject.body = body.substring(headline.length).trim(); // we don't want to duplicate the message
+              }
+              return {
+                commit: commitObject,
+                submoduleCommits: commit.submoduleCommits
               }
             });
           };
@@ -257,15 +261,15 @@
                   };
                 }
               }
-              if (r1.data.commit) {
-                value.commits = {
-                  processing: r1.data.commit.processing,
-                  commits: processCommits(r1.data.commit.commits)
+              if (r1.data.changelog) {
+                value.changelog = {
+                  processing: r1.data.changelog.processing,
+                  commits: processCommits(r1.data.changelog.commits)
                 }
               } else {
-                value.commits = {
-                  processing: true,
-                  commits: []
+                value.changelog = {
+                  processing: false,
+                  commits:  []
                 }
               }
               result.builds[r1.data.coordinates.version] = value;

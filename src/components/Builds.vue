@@ -23,9 +23,7 @@
       <!-- artifacts -->
 
       <!-- changelong -->
-      <div class="changelog" v-if="!primary">
-        <commits :project="platform" :l="build.commits" />
-      </div>
+      <commits v-if="!primary" :project="platform" :l="build.changelog" />
 
       <div class="clearfix"></div>
     </li>
