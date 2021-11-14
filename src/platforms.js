@@ -78,7 +78,8 @@ const mcIsLegacyCheck = tags => {
 }
 
 const markExperimental = version => {
-  return version.toLowerCase().includes("0.0-rc");
+  const ver = version.toLowerCase();
+  return ver.includes("0.0-rc") || ver.includes("snapshot");
 }
 
 export const Platforms = {
@@ -87,7 +88,8 @@ export const Platforms = {
     id: 'spongevanilla',
     name: "SpongeVanilla",
     suffix: "Vanilla",
-    description: "SpongeVanilla is the implementation of the Sponge API on top of Vanilla Minecraft.",
+    featured: true,
+    description: "Not using any mods? SpongeVanilla is for you!",
     recommendation: "Recommended for running plugins without Forge mods.",
     queryModifiers: spongeQueryModifiers,
     tags: {
@@ -111,7 +113,8 @@ export const Platforms = {
     id: 'spongeforge',
     name: "SpongeForge",
     suffix: "Forge",
-    description: "SpongeForge is the implementation of the Sponge API on the Minecraft Forge platform.",
+    featured: true,
+    description: "Using Forge mods? Install the SpongeForge mod to use mods and plugins together!",
     recommendation: "Recommended for running plugins together with Forge mods.",
     queryModifiers: spongeQueryModifiers,
     tags: {

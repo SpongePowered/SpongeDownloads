@@ -1,30 +1,34 @@
 <!-- eslint-disable -->
 <template>
   <main id="downloads">
-    <header>
+    <section class="breadcrumb">
       <b-container>
-        <b-row align-h="center">
-          <b-col sm="12" lg="4">
-            <div class="logo">
-              <h1><platform-logo :platform="platform"/></h1>
-            </div>
-          </b-col>
-          <b-col class="download-category" v-if="platform.loaded && !errored">
-            <h3>{{ platform.tags.minecraft.name }} version</h3>
-            <b-button-group class="versions" :key="platform.tags.minecraft.name">
-              <b-button variant="primary" class="active sponge">{{ platform.tags.minecraft.current }}</b-button>
-              <b-dropdown variant="primary" right>
-                <b-dropdown-item v-for="version of versions" :key="version" @click="platform.tags.minecraft.current=version; changeVersion()">
-                  {{ version }}
-                </b-dropdown-item>
-              </b-dropdown>
-            </b-button-group>
-          </b-col>
-          <!-- Empty column to avoid having platform logo centered -->
-          <b-col v-else />
-        </b-row>
+          <b-row>
+              <b-col>
+                <div class="inline">
+                    <platform-logo :platform="platform"/>
+                </div>
+                <div class="download-category" v-if="minecraftTag && !errored">
+                    <h3>for {{ platform.tags.minecraft.name }} version</h3>
+                    <b-button-group class="versions " :key="platform.tags.minecraft.name">
+                      <b-button variant="primary" class="active sponge"><h3>{{ platform.tags.minecraft.current }}</h3></b-button>
+                      <b-dropdown variant="primary" right>
+                        <b-dropdown-item v-for="version of versions" :key="version" @click="platform.tags.minecraft.current=version; changeVersion()">
+                          {{ version }}
+                        </b-dropdown-item>
+                      </b-dropdown>
+                    </b-button-group>
+                </div>
+              </b-col>
+          </b-row>
       </b-container>
-    </header>
+    </section>
+
+    <section id="download-loader" v-if="init || loading">
+      <div class="container">
+        <h2>Loading builds...</h2>
+      </div>
+    </section>
 
     <section id="builds" v-if="errored">
       <b-container>
@@ -79,12 +83,6 @@
         </div>
       </b-container>
     </section>
-
-    <section id="download-loader" v-if="loading">
-      <div class="container">
-        <h2>Loading builds...</h2>
-      </div>
-    </section>
   </main>
 </template>
 
@@ -108,6 +106,7 @@
   import PlatformLogo from '../components/PlatformLogo.vue';
 
   import Sponsors from '../../sponsors.json';
+import Breadcrumb from '../components/Breadcrumb.vue'
 
   fontawesomeLibrary.add(faChevronLeft, faChevronRight);
 
@@ -117,10 +116,11 @@
 
       // Required to initialize properties properly
       return {
+        init: true,
         cancelSource: axios.CancelToken.source(),
         loading: false,
         loadingRecommended: false,
-        platform: null,
+        platform: Platforms[this.$route.params.project],
         displayTags: null,
         builds: null,
         recommended: null,
@@ -144,6 +144,9 @@
         return Sponsors[Math.floor(Math.random() * Sponsors.length)];
       },
       versions() {
+        if (this.platform.tags.minecraft.versions === undefined) {
+          return [];
+        }
         if (this.displayPreRelease) {
           return this.platform.tags.minecraft.versions;
         }
@@ -151,6 +154,9 @@
       },
       errored() {
         return this.errorMessage !== null;
+      },
+      minecraftTag() {
+        return this.platform?.tags?.minecraft !== undefined;
       }
     },
     methods: {
@@ -167,6 +173,7 @@
           this.builds = null;
           this.recommended = null;
           this.loading = true;
+          this.init = false;
           this.loadingRecommended = true;
           this.offset = this.$route.query.offset || 0
 
@@ -389,9 +396,10 @@
         // We can't use ?? as a null coalesing operator because it fails to compile (both node 14 and 16, which should support it...)
         let offsetParam = this.$route.query["offset"];
         if (offsetParam === undefined || offsetParam === null) {
-          offsetParam = ""
+          offsetParam = "0"
         }
-        let hasChanged = this.$route.query["minecraft"] !== value || offsetParam.toString() !== this.offset.toString() || this.$route.params["project"] !== this.platform.id;
+        let hasChanged = (this.$route.query["minecraft"] || this.platform.latestRecommended.tags.minecraft) !== value || 
+          ((offsetParam.toString() || "0") !== (this.offset.toString() || "0")) || this.$route.params["project"] !== this.platform.id;
         if (hasChanged) {
           this.$router.push({
             name: 'downloads',
@@ -433,6 +441,7 @@
       FontAwesomeIcon,
       PlatformLogo,
       Builds,
+        Breadcrumb,
     }
   }
 </script>
