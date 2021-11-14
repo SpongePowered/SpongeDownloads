@@ -20,14 +20,14 @@
     "bootswatch": "^4.0.0",
     "core-js": "^2.5.4",
     "intl-relativeformat": "^2.1.0",
-    "vue": "^2.5.13",
+    "vue": "^2.6.14",
     "vue-router": "^3.0.1"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.0.0-beta.15",
     "@vue/cli-plugin-eslint": "^3.0.0-beta.15",
     "@vue/cli-service": "^3.0.0-beta.15",
-    "node-sass": "^6.0.1",
+    "sass": "^1.43.4",
     "sass-loader": "^10.2.0",
     "vue-template-compiler": "^2.5.13"
   },
