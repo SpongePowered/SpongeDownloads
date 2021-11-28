@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Overview from './views/Overview.vue'
 import Downloads from './views/Downloads.vue'
+import Settings from './views/Settings.vue'
 import {Platforms} from './platforms'
 
 Vue.use(Router);
@@ -15,6 +16,11 @@ const router = new Router({
       name: 'overview',
       path: '/',
       component: Overview
+    },
+    {
+      name: 'settings',
+      path: '/settings',
+      component: Settings
     },
     {
       name: 'downloads',

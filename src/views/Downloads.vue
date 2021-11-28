@@ -106,7 +106,6 @@
   import PlatformLogo from '../components/PlatformLogo.vue';
 
   import Sponsors from '../../sponsors.json';
-import Breadcrumb from '../components/Breadcrumb.vue'
 
   fontawesomeLibrary.add(faChevronLeft, faChevronRight);
 
@@ -124,8 +123,8 @@ import Breadcrumb from '../components/Breadcrumb.vue'
         displayTags: null,
         builds: null,
         recommended: null,
+        displayPreRelease: this.$root.showPreReleaseMC,
         offset: null,
-        displayPreRelease: false,
         errorMessage: null
       }
     },
@@ -166,6 +165,7 @@ import Breadcrumb from '../components/Breadcrumb.vue'
       updateData() {
         // guard against multiple requests.
         if (!this.loading) {
+          this.displayPreRelease = this.$root.showPreReleaseMC;
           this.errorMessage = null;
           this.platform = Platforms[this.$route.params.project];
           this.determineDisplayTags();
@@ -441,7 +441,6 @@ import Breadcrumb from '../components/Breadcrumb.vue'
       FontAwesomeIcon,
       PlatformLogo,
       Builds,
-        Breadcrumb,
     }
   }
 </script>
