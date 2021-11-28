@@ -1,50 +1,28 @@
 <template>
   <b-container class="platforms" v-once>
+    <b-row v-if="hasFeaturedPlatforms">
+      <b-col class="center">
+        <h2 class="category">Sponge Server Downloads</h2>
+      </b-col>
+    </b-row>
     <b-row v-for="platform in featuredPlatforms" :key="platform.id" class="platform-row">
       <b-col>
-        <b-container class="platform-entry" @click="switchToDownloadPage(platform.id)">
-          <b-row>
-            <b-col>
-              <h3><platform-logo :platform="platform"/></h3>
-            </b-col>
-          </b-row>
-          <b-row>
-            <b-col>
-              <div class="float-right buttons">
-               <!-- <b-button variant="info" :to="{name: 'downloads', params: {project: platform.id}}">
-                  <font-awesome-icon icon="download"/> Download Latest Recommended Build <br/>
-                  <small>Version: version</small>
-                </b-button>
-                &nbsp; -->
-                <b-button variant="secondary" :to="{name: 'downloads', params: {project: platform.id}}">
-                  <font-awesome-icon icon="download"/> View Builds
-                </b-button>
-              </div>
-              <p class="description">{{ platform.description }}</p>
-            </b-col>
-          </b-row>
-        </b-container>
+        <platform-render :platform="platform"></platform-render>
       </b-col>
     </b-row>
     <b-row v-if="hasOtherPlatforms">
       <b-col class="center">
-        <h2>Other Dowonloads</h2>
+        <h2 class="category">Other Downloads</h2>
       </b-col>
     </b-row>
   </b-container>
 </template>
 
 <script>
-  import {BContainer, BRow, BCol, BButton} from 'bootstrap-vue'
-
-  import {library as fontawesomeLibrary} from '@fortawesome/fontawesome-svg-core'
-  import {faDownload} from '@fortawesome/free-solid-svg-icons'
-  import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
+  import {BContainer, BRow, BCol} from 'bootstrap-vue'
 
   import {Platforms} from '../platforms'
-  import PlatformLogo from './PlatformLogo.vue'
-
-  fontawesomeLibrary.add(faDownload);
+  import PlatformRender from './Platform.vue'
 
   export default {
     name: 'platforms',
@@ -67,24 +45,21 @@
         return Object.keys(this.otherPlatforms).length !== 0;
       }
     },
-    methods: {
-      switchToDownloadPage(id) {
-        this.$router.push({name: 'downloads', params: {project: id}});
-      }
-    },
     components: {
       'b-container': BContainer,
       'b-row': BRow,
       'b-col': BCol,
-      'b-button': BButton,
-      FontAwesomeIcon,
-      PlatformLogo,
+      'platform-render': PlatformRender
     }
   }
 </script>
 
 <style lang="scss">
   @import "../assets/variables";
+
+  h2.category {
+    margin-bottom: 10px !important;
+  }
 
   .platforms {
 
