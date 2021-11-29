@@ -251,6 +251,9 @@
               let commitObject = Object.assign({}, commit.commit);
               const headline = commitObject.message.trim();
               const body = commitObject.body.trim();
+              if (headline === "") {
+                return null;
+              }
               if (body === headline) {
                 delete commitObject.body; // we don't need to duplicate this.
               } else if (body.startsWith(headline)) {
@@ -260,7 +263,7 @@
                 commit: commitObject,
                 submoduleCommits: commit.submoduleCommits
               }
-            });
+            }).filter(x => x !== null);
           };
 
           const generateAssetsBlock = (tags, assets) => {
@@ -310,10 +313,10 @@
                   };
                 }
               }
-              if (r1.data.changelog) {
+              if (r1.data.commit) {
                 value.changelog = {
-                  processing: r1.data.changelog.processing,
-                  commits: processCommits(r1.data.changelog.commits)
+                  processing: r1.data.commit.processing,
+                  commits: processCommits(r1.data.commit.commits)
                 }
               } else {
                 value.changelog = {
