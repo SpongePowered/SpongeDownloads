@@ -207,16 +207,22 @@
             cancelToken: this.cancelSource.token
           }).then(response => {
             const recommended = response.data;
-
+            this.$set(this.platform, 'latestRecommended', recommended);
+          }, (error) => {
+            if (error.response && error.response.status === 404) {
+              this.loadingRecommended = false;
+            }
+            else {
+              this.teeError(`Error while fetching the latest recommended version for the platform ${this.platform.id}`);
+            }
+          }).finally(() => {
             for (const [index, tag] of Object.entries(this.platform.tags)) {
               tag.versions = tags[index];
             }
 
-            this.$set(this.platform, 'latestRecommended', recommended);
             this.$set(this.platform, 'loaded', true);
-
             this.redirectToDefaultVersion()
-          }, () => this.teeError(`Error while fetching the latest recommended version for the platform ${this.platform.id}`))
+          })
         }, () => this.teeError(`Error while fetching the platform ${this.platform.id}`))
       },
       teeError(error) {
@@ -345,8 +351,11 @@
       },
       fetchBuilds() {
         const errorCallback = (error) => {
-          if (error.response && error.response.status === 404) this.loadingRecommended = false;
-          else this.teeError(`Error while fetching the latest recommended version for the platform ${this.platform.id} and tags ${this.buildAPITagsQuery()}`)
+          if (error.response && error.response.status === 404) {
+            this.loadingRecommended = false;
+          } else {
+            this.teeError(`Error while fetching the latest recommended version for the platform ${this.platform.id} and tags ${this.buildAPITagsQuery()}`);
+          } 
         };
         axios.get(`/groups/${this.platform.group}/artifacts/${this.platform.id}/versions?recommended=true&limit=1&tags=${this.buildAPITagsQuery()}`, {
           cancelToken: this.cancelSource.token
@@ -383,8 +392,13 @@
             this.$set(this.platform.tags[index], 'current', this.$route.query[index]);
             individual = true;
           } else {
-            this.$set(this.platform.tags[index], 'current', this.platform.latestRecommended.tags.minecraft);
-            this.updateRouter(this.platform.latestRecommended.tags.minecraft);
+            if (this.platform.latestRecommended) {
+              this.$set(this.platform.tags[index], 'current', this.platform.latestRecommended.tags.minecraft);
+              this.updateRouter(this.platform.latestRecommended.tags.minecraft);
+            } else {
+              this.$set(this.platform.tags[index], 'current', this.versions[0]);
+              this.updateRouter(this.versions[0]);
+            }
           }
 
           this.fetchBuilds();
@@ -401,7 +415,7 @@
         if (offsetParam === undefined || offsetParam === null) {
           offsetParam = "0"
         }
-        let hasChanged = (this.$route.query["minecraft"] || this.platform.latestRecommended.tags.minecraft) !== value || 
+        let hasChanged = (this.$route.query["minecraft"] || this.platform.latestRecommended?.tags?.minecraft) !== value || 
           ((offsetParam.toString() || "0") !== (this.offset.toString() || "0")) || this.$route.params["project"] !== this.platform.id;
         if (hasChanged) {
           this.$router.push({
