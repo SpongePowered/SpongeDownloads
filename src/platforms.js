@@ -62,7 +62,11 @@ const spongeQueryModifiers = {
   // force API 7, unfortunately things aren't sorted by date here and all API-8 builds are useless.
   "1.12": query => query["api"] = 7,
   "1.12.1": query => query["api"] = 7,
-  "1.12.2": query => query["api"] = 7
+  "1.12.2": query => query["api"] = 7,
+  "1.11.2": query => query["api"] = 6,
+  "1.11": query => query["api"] = 6,
+  "1.10": query => query["api"] = 5,
+  "1.10.2": query => query["api"] = 5
 };
 
 const legacyMcVersions = [

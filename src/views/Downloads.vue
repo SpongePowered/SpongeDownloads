@@ -434,9 +434,11 @@
           currentQuery["minecraft"] = value.current;
         }
 
-        let modifier = Object.keys(this.platform.queryModifiers).find(x => value.current === x);
-        if (modifier !== undefined) {
-          this.platform.queryModifiers[modifier](currentQuery);
+        if (this.$root.filterMCVersionsThatDontMatchExpectedAPI) {
+          let modifier = Object.keys(this.platform.queryModifiers).find(x => value.current === x);
+          if (modifier !== undefined) {
+            this.platform.queryModifiers[modifier](currentQuery);
+          }
         }
 
         return this.stringifyQuery(currentQuery);

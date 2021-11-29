@@ -12,7 +12,8 @@ axios.defaults.baseURL = process.env.VUE_APP_API_URL || "https://staging-dl-api.
 
 new Vue({
   data: {
-    spr: window.localStorage.getItem(Constants.showExperimentalKey) === "true" ? true : false
+    spr: window.localStorage.getItem(Constants.showExperimentalKey) === "true" ? true : false,
+    filterAPIVersions: window.localStorage.getItem(Constants.filterAPIVersions) === "false" ? false : true, // defaults to true
   },
   computed: {
     showPreReleaseMC: {
@@ -22,6 +23,15 @@ new Vue({
       set: function(value) {
         window.localStorage.setItem(Constants.showExperimentalKey, value);
         this.spr = value;
+      }
+    },
+    filterMCVersionsThatDontMatchExpectedAPI: {
+      get: function() {
+        return this.filterAPIVersions
+      },
+      set: function(value) {
+        window.localStorage.setItem(Constants.filterAPIVersions, value);
+        this.filterAPIVersions = value;
       }
     }
   },
