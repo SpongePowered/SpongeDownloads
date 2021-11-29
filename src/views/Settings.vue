@@ -27,7 +27,7 @@
                     name="show-pre-release">
                     <p>Show pre-release versions of Minecraft</p>
                     <p>
-                      Turning this one will show <em>pre-release</em> versions of Minecraft for which Sponge builds exist in the version selector.
+                      Turning this on will show <em>pre-release</em> versions of Minecraft for which Sponge builds exist in the version selector.
                     </p>
                 </b-form-checkbox>
             </b-col>
