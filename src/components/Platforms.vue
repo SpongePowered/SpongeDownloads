@@ -1,29 +1,28 @@
 <template>
   <b-container class="platforms" v-once>
-    <b-row>
-      <b-col v-for="platform in platforms" :key="platform.id">
-        <h3><platform-logo :platform="platform"/></h3>
-        <p class="description">{{ platform.description }}</p>
-        <b-button variant="primary" :to="{name: 'downloads', params: {project: platform.id}}">
-          <font-awesome-icon icon="download"/> Download
-        </b-button>
-        <p class="recommendation">{{ platform.recommendation }}</p>
+    <b-row v-if="hasFeaturedPlatforms">
+      <b-col class="center">
+        <h2 class="category">Sponge Server Downloads</h2>
+      </b-col>
+    </b-row>
+    <b-row v-for="platform in featuredPlatforms" :key="platform.id" class="platform-row">
+      <b-col>
+        <platform-render :platform="platform"></platform-render>
+      </b-col>
+    </b-row>
+    <b-row v-if="hasOtherPlatforms">
+      <b-col class="center">
+        <h2 class="category">Other Downloads</h2>
       </b-col>
     </b-row>
   </b-container>
 </template>
 
 <script>
-  import {BContainer, BRow, BCol, BButton} from 'bootstrap-vue'
-
-  import {library as fontawesomeLibrary} from '@fortawesome/fontawesome-svg-core'
-  import {faDownload} from '@fortawesome/free-solid-svg-icons'
-  import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
+  import {BContainer, BRow, BCol} from 'bootstrap-vue'
 
   import {Platforms} from '../platforms'
-  import PlatformLogo from './PlatformLogo.vue'
-
-  fontawesomeLibrary.add(faDownload);
+  import PlatformRender from './Platform.vue'
 
   export default {
     name: 'platforms',
@@ -32,13 +31,25 @@
         platforms: Platforms
       }
     },
+    computed: {
+      featuredPlatforms() {
+        return Object.fromEntries(Object.entries(this.platforms).filter(x => x[1].featured));
+      },
+      otherPlatforms() {
+        return Object.fromEntries(Object.entries(this.platforms).filter(x => !x[1].featured));
+      },
+      hasFeaturedPlatforms() {
+        return Object.keys(this.featuredPlatforms).length !== 0;
+      },
+      hasOtherPlatforms() {
+        return Object.keys(this.otherPlatforms).length !== 0;
+      }
+    },
     components: {
       'b-container': BContainer,
       'b-row': BRow,
       'b-col': BCol,
-      'b-button': BButton,
-      FontAwesomeIcon,
-      PlatformLogo,
+      'platform-render': PlatformRender
     }
   }
 </script>
@@ -46,18 +57,45 @@
 <style lang="scss">
   @import "../assets/variables";
 
+  h2.category {
+    margin-bottom: 10px !important;
+  }
+
   .platforms {
-    text-align: center;
+
+    margin-top: 20px;
+
+   // text-align: center;
     font-size: 1.2rem;
+
+    .platform-row {
+
+      .platform-entry {
+        cursor: pointer;
+        background-color: $sponge_light_grey;
+
+        &:hover {
+          background-color: $sponge_lightish_grey;
+        }
+      }
+
+      &:nth-child(odd) .platform-entry {
+        background-color: $sponge_lighter_grey;
+
+        &:hover {
+          background-color: $sponge_lightish_grey;
+        }
+      }
+
+    }
 
     h3 {
       font-size: 3rem;
     }
 
-    .description {
-      @include media-breakpoint-up(md) {
-        height: 4.5em;
-      }
+    .buttons {
+      text-align: center;
+      margin-bottom: 0.2em;
     }
 
     .recommendation {

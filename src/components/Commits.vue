@@ -3,10 +3,10 @@
     <div class="processing" v-if="processing">
       <i class="bi bi-exclamation-triangle-fill"></i>
       <span v-if="containsCommits">
-        We're still generating the changelog for this build, the following may be incomplete.
+        We're generating the changelog for this build, the following may be incomplete.
       </span>
       <span v-else>
-        We're still generating the changelog for this build.
+        We're generating the changelog for this build, check back later for commit information.
       </span>
     </div> 
 <!--      <i class="pad-icon bi bi-info-circle"></i>Commit information may be incomplete - it is still being processed. -->

@@ -10,11 +10,16 @@ header {
     font-size: 4rem;
   }
 
+  h2 {
+    margin-bottom: 0;
+  }
+
   padding-top: 20px;
   padding-bottom: 20px;
 
   @include media-breakpoint-up(md) {
-    padding-top: 50px;
-    padding-bottom: 50px;
+    padding-top: 20px;
+    padding-bottom: 20px;
   }
 }
+

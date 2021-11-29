@@ -34,10 +34,10 @@
 
       <b-collapse is-nav id="main-navbar-collapse">
         <b-navbar-nav class="ml-auto">
-          <b-nav-item :key="home"
-                      :to="{name: 'overview'}" exact>Downloads Home</b-nav-item>
+          <b-nav-item :key="home" :to="{name: 'overview'}" exact>Downloads</b-nav-item>
           <b-nav-item v-for="platform in platforms" :key="platform.id"
                       :to="{name: 'downloads', params: {project: platform.id}}">{{ platform.name }}</b-nav-item>
+          <b-nav-item :to="{name: 'settings'}" exact>Settings</b-nav-item>
         </b-navbar-nav>
       </b-collapse>
     </b-container>
