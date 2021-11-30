@@ -97,16 +97,59 @@ section.filters {
 
 .navigation {
   margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
 
-  .newer {
-    float: left;
-    margin-left: 30px;
-  }
-
-  .older {
-    float: right;
+  button {
     margin-right: 10px;
+
+    &:last-of-type {
+      margin-right: 0px;
+    }
   }
+
+  .btn-group {
+    margin-right: 10px;
+
+    button {
+      margin-right: 0px;
+    }
+  }
+
+  .page-item {
+    &.disabled {
+      &:not([role="separator"]) {
+        > .page-link {
+          background-color: tint($secondary, 60%);
+        }
+      }
+      > .page-link {
+        background-color: tint($secondary, 20%);
+      }
+    }
+
+    > a.page-link {
+      background-color: $secondary;
+
+      &:hover {
+        background-color: shade($secondary, 30%);
+      }
+
+      &.router-link-exact-active  {
+        background-color: $primary;
+      }
+    }
+  }
+
+  // .newer {
+  //   float: left;
+  //   margin-left: 30px;
+  // }
+
+  // .older {
+  //   float: right;
+  //   margin-right: 10px;
+  // }
 }
 
 .alert a.link {

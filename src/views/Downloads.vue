@@ -78,13 +78,17 @@
         </div>
 
         <div class="navigation" v-if="builds">
-          <b-button class="newer" v-if="offset > 0" size="sm" active-class="" @click="changePage(-10)">
-            <font-awesome-icon icon="chevron-left"/> Newer
-          </b-button>
-          <b-button class="older" size="sm" active-class="" v-if="builds.size > 10 && builds.size - 10 > offset" @click="changePage(10)">
-            Older <font-awesome-icon icon="chevron-right"/>
-          </b-button>
-          <div class="clearfix"></div>
+          <b-pagination-nav
+            v-model="currentPage"
+            :number-of-pages="pages"
+            :link-gen="generatePaginationLink"
+            first-number
+            last-number
+            use-router
+          >
+              <template #prev-text><font-awesome-icon icon="chevron-left"/> Newer</template>
+              <template #next-text>Older <font-awesome-icon icon="chevron-right"/></template>
+          </b-pagination-nav>
         </div>
       </b-container>
     </section>
@@ -93,7 +97,7 @@
 
 <script>
 /* eslint-disable */
-  import {BContainer, BRow, BCol, BButton, BButtonGroup, BBadge, BDropdown, BDropdownItem, BImg} from 'bootstrap-vue'
+  import {BContainer, BRow, BCol, BButton, BButtonGroup, BBadge, BDropdown, BDropdownItem, BImg, BPaginationNav} from 'bootstrap-vue'
 
   import {library as fontawesomeLibrary} from '@fortawesome/fontawesome-svg-core'
   import {faChevronLeft, faChevronRight} from '@fortawesome/free-solid-svg-icons'
@@ -161,6 +165,13 @@
       },
       minecraftTag() {
         return this.platform?.tags?.minecraft !== undefined;
+      },
+      currentPage() {
+        const offset = this.offset || 0;
+        return ((offset - (offset % 10)) / 10) + 1;
+      },
+      pages() {
+        return (parseInt(this.builds.size) - parseInt(this.builds.size % 10)) / 10 + 1;
       }
     },
     methods: {
@@ -349,6 +360,11 @@
         this.offset = 0;
         this.fetchBuilds();
       },
+      changePageAbs(offset = 0, limit = 10) {
+        this.builds = null;
+        this.loading = true;
+        this.fetchBuildsPage(limit, offset);
+      },
       changePage(offsetChange = 10) {
         this.builds = null;
         this.loading = true;
@@ -450,6 +466,15 @@
       },
       stringifyQuery(q) {
         return Object.keys(q).reduce((previous, key) => `${previous},${key}:${q[key]}`, "")
+      },
+      generatePaginationLink(pageNum) {
+        if (pageNum === 1 && !this.$route.query.offset) {
+          return this.$route.query; // so that page 1 remains active in the pagination.
+        }
+        const offset = (pageNum - 1) * 10;
+        return {
+          query: { ...this.$route.query, offset }
+        }
       }
     },
     components: {
@@ -462,9 +487,19 @@
       'b-dropdown': BDropdown,
       'b-dropdown-item': BDropdownItem,
       'b-img': BImg,
+      'b-pagination-nav': BPaginationNav,
       FontAwesomeIcon,
       PlatformLogo,
       Builds,
+    },
+    directives: {
+      visible: function(el, binding) {
+        if (binding.value) {
+          el.style.visibility = "visible";
+        } else {
+          el.style.visibility = "hidden";
+        }
+      }
     }
   }
 </script>
