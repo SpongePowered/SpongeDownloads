@@ -468,7 +468,7 @@
         return Object.keys(q).reduce((previous, key) => `${previous},${key}:${q[key]}`, "")
       },
       generatePaginationLink(pageNum) {
-        if (pageNum === 1 && !this.$route.query.offset) {
+        if (pageNum === 1 && this.$route.query.offset === undefined) {
           return this.$route.query; // so that page 1 remains active in the pagination.
         }
         const offset = (pageNum - 1) * 10;
