@@ -12,7 +12,12 @@
                     <h3>for {{ platform.tags.minecraft.name }} version</h3>
                     <b-button-group class="versions " :key="platform.tags.minecraft.name">
                       <b-button variant="primary" class="active sponge"><h3>{{ platform.tags.minecraft.current }}</h3></b-button>
-                      <b-dropdown variant="primary" right>
+                      <b-dropdown variant="primary" right :popper-opts="{ 
+                          modifiers: {
+                            flip: { enabled: false }, 
+                            preventOverflow: { enabled: false } 
+                          }
+                        }">
                         <b-dropdown-item v-for="version of versions" :key="version" @click="platform.tags.minecraft.current=version; changeVersion()">
                           {{ version }}
                         </b-dropdown-item>
