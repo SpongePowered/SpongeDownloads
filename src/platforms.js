@@ -1,4 +1,5 @@
 import {faDownload, faCode, faGraduationCap, faArchive, faWrench} from '@fortawesome/free-solid-svg-icons'
+import VersionSort from './versort';
 
 export const Labels = {
   recommended: {
@@ -101,7 +102,8 @@ export const Platforms = {
         name: "api"
       },
       minecraft: {
-        name: "minecraft"
+        name: "minecraft",
+        sort: VersionSort.sortVersions
       },
     },
     artifactTypes: [
@@ -137,7 +139,8 @@ export const Platforms = {
         }
       },
       minecraft: {
-        name: "minecraft"
+        name: "minecraft",
+        sort: VersionSort.sortVersions
       },
     },
     artifactTypes: [

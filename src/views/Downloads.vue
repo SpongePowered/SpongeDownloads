@@ -110,7 +110,7 @@
 
   import axios from 'axios';
 
-  import {Platforms, Labels} from '../platforms';
+  import {Platforms} from '../platforms';
   import Builds from '../components/Builds.vue';
   import PlatformLogo from '../components/PlatformLogo.vue';
 
@@ -233,7 +233,7 @@
             }
           }).finally(() => {
             for (const [index, tag] of Object.entries(this.platform.tags)) {
-              tag.versions = tags[index];
+              tag.versions = (tag.sort || (i => i))(tags[index]); // sorts the tags if the platform demands it.
             }
 
             this.$set(this.platform, 'loaded', true);
