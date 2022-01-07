@@ -133,7 +133,7 @@ export const Platforms = {
         color: 'forge',
         transform: function(value) {
           if (value === "2838") {
-            return "Works with 2855";
+            return "Works with 2860";
           }
           return value;
         }
