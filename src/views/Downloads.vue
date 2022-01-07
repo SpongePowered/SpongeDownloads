@@ -4,7 +4,12 @@
     <section class="breadcrumb">
       <b-container>
           <b-row>
-              <b-col>
+              <b-col v-if="incorrectProject">
+                <div class="inline">
+                    <platform-logo :platform="{ id: `Unknown Project` }"/>
+                </div>
+              </b-col>
+              <b-col v-else>
                 <div class="inline">
                     <platform-logo :platform="platform"/>
                 </div>
@@ -43,6 +48,17 @@
           <p>If this error persists, please let us know <a href="https://discord.gg/sponge">in our Discord channels</a> so that we can investigate further.</p>
           <hr>
           <p><small><em>Reported error: {{ errorMessage }}</em></small></p>
+        </div>
+      </b-container>
+    </section>
+    <section id="builds" v-else-if="incorrectProject">
+      <b-container>
+        <div class="alert alert-danger">
+          <h3>Oh no! That project is not available to download via our downloads site!</h3>
+          <p>We're sorry, but the project "{{ invalidProject }}" is not available to download via the Sponge Downloads site at this time.</p>
+          <p>If you're looking to download a Sponge project and need help finding it, please come ask us <a href="https://discord.gg/sponge">in our Discord channels</a>.</p>
+          <hr>
+          <p><small><em>Reported error: {{ invalidProject }}</em> is not a valid project name.</small></p>
         </div>
       </b-container>
     </section>
@@ -134,7 +150,8 @@
         recommended: null,
         displayPreRelease: this.$root.showPreReleaseMC,
         offset: null,
-        errorMessage: null
+        errorMessage: null,
+        invalidProject: null
       }
     },
     created() {
@@ -163,6 +180,9 @@
       errored() {
         return this.errorMessage !== null;
       },
+      incorrectProject() {
+        return !this.errored && this.invalidProject !== null;
+      },
       minecraftTag() {
         return this.platform?.tags?.minecraft !== undefined;
       },
@@ -183,20 +203,27 @@
         if (!this.loading) {
           this.displayPreRelease = this.$root.showPreReleaseMC;
           this.errorMessage = null;
+          this.invalidProject = null;
           this.platform = Platforms[this.$route.params.project];
-          this.determineDisplayTags();
-
-          this.builds = null;
-          this.recommended = null;
-          this.loading = true;
-          this.init = false;
-          this.loadingRecommended = true;
-          this.offset = this.$route.query.offset || 0
-
-          if (this.platform.loaded) {
-            this.redirectToDefaultVersion();
+          if (!this.platform) {
+            // Platform does not exist
+            this.init = false;
+            this.invalidProject = this.$route.params.project;
           } else {
-            this.fetchPlatform()
+            this.determineDisplayTags();
+
+            this.builds = null;
+            this.recommended = null;
+            this.loading = true;
+            this.init = false;
+            this.loadingRecommended = true;
+            this.offset = this.$route.query.offset || 0
+
+            if (this.platform.loaded) {
+              this.redirectToDefaultVersion();
+            } else {
+              this.fetchPlatform()
+            }
           }
         }
       },

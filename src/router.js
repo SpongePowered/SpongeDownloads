@@ -31,8 +31,13 @@ const router = new Router({
 });
 
 router.afterEach(to => {
-  const suffix = to.params.project ? Platforms[to.params.project].suffix : "";
-  document.title = `Sponge${suffix} Downloads`
+  if (to.params.project) {
+    const platform = Platforms[to.params.project]
+    const suffix = platform ? platform.suffix : "";
+    document.title = `Sponge${suffix} Downloads`
+  } else {
+    document.title = `Sponge Downloads`
+  }
 });
 
 export default router;
