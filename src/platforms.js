@@ -128,15 +128,9 @@ export const Platforms = {
         name: "api"
       },
       forge: {
-        name: "forge",
+        name: "Minimum Forge Required",
         display: true,
-        color: 'forge',
-        transform: function(value) {
-          if (value === "2838") {
-            return "Works with 2860";
-          }
-          return value;
-        }
+        color: 'forge'
       },
       minecraft: {
         name: "minecraft",
