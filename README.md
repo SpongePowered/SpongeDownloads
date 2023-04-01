@@ -8,7 +8,7 @@ SpongeDownloads is a [single-page application (SPA)](https://en.wikipedia.org/wi
 
 To set up your workspace, ensure you have the following installed:
 
-* [Node.js](https://nodejs.org/en/) version 16 (at the time of writing, v16.13.0 was in use); and
+* [Node.js](https://nodejs.org/en/) version 16 (at the time of writing, v16.20.0 was in use); and
 * [npm](https://www.npmjs.com/) v8.1 or later.
 
 Clone this repository, navigate to the root directory in your favourite shell and run `npm i`.
