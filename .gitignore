@@ -183,5 +183,4 @@ $RECYCLE.BIN/
 *.lnk
 
 ### SpongeDownloads ###
-package-lock.json
 dist/
