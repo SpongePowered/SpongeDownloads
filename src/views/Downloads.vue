@@ -17,10 +17,10 @@
                     <h3>for {{ platform.tags.minecraft.name }} version</h3>
                     <b-button-group class="versions " :key="platform.tags.minecraft.name">
                       <b-button variant="primary" class="active sponge"><h3>{{ platform.tags.minecraft.current }}</h3></b-button>
-                      <b-dropdown variant="primary" right :popper-opts="{ 
+                      <b-dropdown variant="primary" right :popper-opts="{
                           modifiers: {
-                            flip: { enabled: false }, 
-                            preventOverflow: { enabled: false } 
+                            flip: { enabled: false },
+                            preventOverflow: { enabled: false }
                           }
                         }">
                         <b-dropdown-item v-for="version of versions" :key="version" @click="platform.tags.minecraft.current=version; changeVersion()">
@@ -166,7 +166,9 @@
     },
     computed: {
       sponsor() {
-        return Sponsors[Math.floor(Math.random() * Sponsors.length)];
+        const totalWeight = Sponsors.reduce((acc, cur) => acc + cur.weight, 0);
+        let randomNumber = Math.floor(Math.random() * totalWeight);
+        return Sponsors.find((sponsor) => (randomNumber -= sponsor.weight) < 0);
       },
       versions() {
         if (this.platform.tags.minecraft.versions === undefined) {
@@ -285,7 +287,7 @@
           const keys = Object.keys(response.data.artifacts);
           // For each key, we need to make an AJAX call...
           let futures = new Array(); // AxiosPromises
-          keys.forEach(element => 
+          keys.forEach(element =>
             futures.push(axios.get(`/groups/${this.platform.group}/artifacts/${this.platform.id}/versions/${element}`, {
               cancelToken: this.cancelSource.token
             })));
@@ -327,7 +329,7 @@
             for (const asset of assets.filter(x => x.extension === "jar")) {
               const a = platform.artifactTypes.find(x => x[classifier] === asset.classifier);
               if (a !== undefined) {
-                const res = { 
+                const res = {
                   type: a,
                   asset: asset
                 };
@@ -403,7 +405,7 @@
             this.loadingRecommended = false;
           } else {
             this.teeError(`Error while fetching the latest recommended version for the platform ${this.platform.id} and tags ${this.buildAPITagsQuery()}`);
-          } 
+          }
         };
         axios.get(`/groups/${this.platform.group}/artifacts/${this.platform.id}/versions?recommended=true&limit=1&tags=${this.buildAPITagsQuery()}`, {
           cancelToken: this.cancelSource.token
@@ -456,14 +458,14 @@
       updateRouter(value) {
         // don't push when we don't need to
         // The second parameter is written as such as the pushed parameter might be a number or a string...
-        // 
+        //
         // We can't use || as a null coalesing operator because 0 means something
         // We can't use ?? as a null coalesing operator because it fails to compile (both node 14 and 16, which should support it...)
         let offsetParam = this.$route.query["offset"];
         if (offsetParam === undefined || offsetParam === null) {
           offsetParam = "0"
         }
-        let hasChanged = (this.$route.query["minecraft"] || this.platform.latestRecommended?.tags?.minecraft) !== value || 
+        let hasChanged = (this.$route.query["minecraft"] || this.platform.latestRecommended?.tags?.minecraft) !== value ||
           ((offsetParam.toString() || "0") !== (this.offset.toString() || "0")) || this.$route.params["project"] !== this.platform.id;
         if (hasChanged) {
           this.$router.push({
