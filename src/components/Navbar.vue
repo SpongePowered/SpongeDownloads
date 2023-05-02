@@ -25,7 +25,7 @@
             <li class="active"><a :href="baseUrl">
               <font-awesome-icon icon="download" fixed-width/> Downloads</a></li>
             <li><a href="https://www.spongepowered.org/chat">
-              <font-awesome-icon icon="comment" fixed-width/> Chat</a></li>
+              <font-awesome-icon :icon="['fab', 'discord']" fixed-width/> Discord</a></li>
           </ul>
         </div>
       </div>
@@ -48,12 +48,13 @@
   import {BContainer, BNavbar, BNavbarNav, BNavbarToggle, BNavItem, BCollapse} from 'bootstrap-vue'
 
   import {library as fontawesomeLibrary} from '@fortawesome/fontawesome-svg-core'
-  import {faChevronDown, faHome, faComments, faCode, faBook, faGraduationCap, faPlug, faDownload, faComment} from '@fortawesome/free-solid-svg-icons'
+  import {faChevronDown, faHome, faComments, faCode, faBook, faGraduationCap, faPlug, faDownload} from '@fortawesome/free-solid-svg-icons'
+  import {faDiscord} from '@fortawesome/free-brands-svg-icons'
   import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
 
   import {Platforms} from "../platforms";
 
-  fontawesomeLibrary.add(faChevronDown, faHome, faComments, faCode, faBook, faGraduationCap, faPlug, faDownload, faComment);
+  fontawesomeLibrary.add(faChevronDown, faHome, faComments, faCode, faBook, faGraduationCap, faPlug, faDownload, faDiscord);
 
   export default {
     name: 'navbar',

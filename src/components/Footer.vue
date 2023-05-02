@@ -1,12 +1,7 @@
 <template>
   <footer>
     <b-container>
-      <p>Copyright &copy; SpongePowered 2014-2021</p>
-      <p id="fastly">Accelerated by<br>
-        <a href="https://www.fastly.com">
-          <img src="https://www.spongepowered.org/assets/img/fastly.png" alt="Fastly" height="45" width="100">
-        </a>
-      </p>
+      <span>Copyright &copy; SpongePowered 2014-{{ new Date().getFullYear() }}</span>
     </b-container>
   </footer>
 </template>
@@ -32,9 +27,5 @@
     font-size: 75%;
 
     padding: 10px;
-
-    #fastly {
-      margin: 0;
-    }
   }
 </style>
