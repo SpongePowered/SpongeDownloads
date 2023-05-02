@@ -24,7 +24,7 @@
                <img src="https://spongepowered.org/assets/img/icons/ore.svg" alt="" class="ore-nav"> Plugins (Ore)</a></li>
             <li class="active"><a :href="baseUrl">
               <font-awesome-icon icon="download" fixed-width/> Downloads</a></li>
-            <li><a href="https://www.spongepowered.org/chat">
+            <li><a href="https://discord.gg/sponge">
               <font-awesome-icon :icon="['fab', 'discord']" fixed-width/> Discord</a></li>
           </ul>
         </div>
