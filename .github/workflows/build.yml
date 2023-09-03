@@ -23,7 +23,7 @@ jobs:
     - run: npm run build
       env:
         VUE_APP_PUBLIC_PATH: /downloads
-        VUE_APP_API_URL: https://dl-api-new.spongepowered.org/api/v2/
+        VUE_APP_API_URL: https://dl-api.spongepowered.org/v2/
         VUE_APP_INDEX_PATH: index.html
     - name: Archive production artifacts
       uses: actions/upload-artifact@v3
