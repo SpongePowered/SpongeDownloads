@@ -129,7 +129,7 @@ export const Platforms = {
       },
       forge: {
         name: "Minimum Forge Required",
-        display: true,
+        display: false,
         color: 'forge'
       },
       minecraft: {
