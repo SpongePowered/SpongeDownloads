@@ -1,5 +1,14 @@
 [
   {
+    "name": "ScalaCube",
+    "images": [
+      {"src": "assets/img/sponsors/scalacube.svg"}
+    ],
+    "link": "https://scalacube.com/p/_hosting_server_minecraft/sponsored/spongepowered",
+    "additionalText": "",
+    "weight": 3
+  },
+  {
     "name": "BisectHosting",
     "images": [
       {"src": "assets/img/sponsors/bisecthosting.svg"}
