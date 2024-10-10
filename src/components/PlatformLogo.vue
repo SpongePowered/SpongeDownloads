@@ -12,7 +12,7 @@
     props: ['platform'],
     computed: {
       isBadged: function () {
-         return ["spongevanilla", "spongeforge", "spongeapi"].indexOf(this.platform.id) !== -1
+         return ["spongevanilla", "spongeforge", "spongeneo", "spongeapi"].indexOf(this.platform.id) !== -1
       }
     }
   };
@@ -54,6 +54,10 @@
 
           &.spongeforge {
             background-color: $spongeforge_color;
+          }
+
+          &.spongeneo {
+            background-color: $spongeneo_color;
           }
 
           &.spongeapi {

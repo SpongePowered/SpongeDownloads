@@ -144,5 +144,36 @@ export const Platforms = {
     ],
     checkIsLegacy: mcIsLegacyCheck,
     checkExperimental: markExperimental
+  },
+  spongeneo: {
+    group: 'org.spongepowered',
+    id: 'spongeneo',
+    name: "SpongeNeo",
+    suffix: "Neo",
+    featured: true,
+    description: "Using NeoForge mods? Install the SpongeNeo to use mods and plugins together!",
+    recommendation: "Recommended for running plugins together with NeoForge mods.",
+    queryModifiers: spongeQueryModifiers,
+    tags: {
+      api: {
+        name: "api"
+      },
+      neo: {
+        name: "Minimum NeoForge Required",
+        display: false,
+        color: 'forge'
+      },
+      minecraft: {
+        name: "minecraft",
+        sort: VersionSort.sortVersions
+      },
+    },
+    artifactTypes: [
+      ArtifactTypes.Main,
+      ArtifactTypes.Sources,
+      ArtifactTypes.DevShaded
+    ],
+    checkIsLegacy: mcIsLegacyCheck,
+    checkExperimental: markExperimental
   }
 };

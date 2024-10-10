@@ -126,7 +126,7 @@
 
   import axios from 'axios';
 
-  import {Platforms} from '../platforms';
+  import {Platforms} from '@/platforms';
   import Builds from '../components/Builds.vue';
   import PlatformLogo from '../components/PlatformLogo.vue';
 
