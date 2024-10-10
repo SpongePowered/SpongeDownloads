@@ -3,9 +3,11 @@ module.exports = {
   env: {
     node: true
   },
+  files: ['*.js', '*.vue'],
   extends: [
-    'plugin:vue/essential',
-    'eslint:recommended'
+    'plugin:vue/vue3-essential',
+    'eslint:recommended',
+    '@vue/eslint-config-prettier/skip-formatting'
   ],
   rules: {
     'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
@@ -15,6 +17,6 @@ module.exports = {
     'vue/no-reserved-component-names': 'off'
   },
   parserOptions: {
-    parser: 'babel-eslint'
+    ecmaVersion: 'latest'
   }
 };
